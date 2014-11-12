@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+   <item android:id="@+id/add"
+              android:icon="@android:drawable/ic_menu_add"
+              android:title="@string/Title_aguardando" />
+
+      <item android:id="@+id/edit"
+              android:icon="@android:drawable/ic_menu_edit"
+              android:title="@string/Title_bancada" />
+
+       <item android:id="@+id/delete"
+            android:icon="@android:drawable/dark_header"
+             android:title="@string/Title_bancada" />
+
+</menu>
