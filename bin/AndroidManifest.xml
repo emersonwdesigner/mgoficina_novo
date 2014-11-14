@@ -153,7 +153,8 @@
         <activity
             android:name="com.mgoficina.ClientesActivity"
             android:label="@string/title_activity_clientes"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:theme="@style/Theme.Sherlock.Light">
         </activity>
         <activity
             android:name="com.mgoficina.CameraActivity"

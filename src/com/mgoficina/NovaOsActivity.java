@@ -3,6 +3,7 @@ package com.mgoficina;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,6 +47,7 @@ public class NovaOsActivity extends SherlockActivity implements OnItemClickListe
     ImageView viewImage;
     Button b;
     final DataBaseHandler db = new DataBaseHandler(this);
+    ContentValues values = new ContentValues();
     EditText numero, cliente, novoCliente, novoTelefone, novoEndereco;
     LinearLayout LayOs, LayCliente, LayNovoCliente;
     String[] from;
@@ -192,7 +194,14 @@ byte imageInByte[] = stream.toByteArray();
 
 if(var3.equals("")){
 	Log.v("aviso", "nova3");
-	db.criaCliente(var6, varInt, var8, 0);
+	//db.criaCliente(var6, varInt, var8, 0);
+	//inserindo usando o crud				
+					values.put(DataBaseHandler.KEY_CLIENTE_NAME, var6);
+					values.put(DataBaseHandler.KEY_CLIENTE_TELEFONE, varInt);
+					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, var8);
+					values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
+
+	db.Insert(DataBaseHandler.TABLE_CLIENTES, values);
 	var3 = var6;
 }else{
 	int varInt9=0;

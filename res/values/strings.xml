@@ -33,6 +33,7 @@
     <string name="entrada">Entrada</string>
     <string name="enviar_para">Enviar para</string>
     <string name="excluir_item">Excluir item</string>
+    <string name="excluir">Excluir</string>
     <string name="selecionar_foto">Selecionar Imagem</string>
     <string name="excluir_foto">Excluir Imagem</string>
     <string name="descricao">Descrição</string>
@@ -201,5 +202,9 @@
     <string name="deve_estar_ciente">Você deve estar ciente do aviso!</string>
     <string name="item">item</string>
     <string name="itens">itens</string>
+    <string name="nome">Nome</string>
+        <string name="toque_segure">Toque e segure para as ações</string>
+        <string name="cliente_inserido">Cliente inserido com sucesso!</string>
+        <string name="cliente_removido">Cliente removido com sucesso!</string>
 
 </resources>

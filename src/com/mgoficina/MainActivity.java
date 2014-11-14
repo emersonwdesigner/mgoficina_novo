@@ -210,6 +210,7 @@ int soma =
             
             SubMenu sub = menu.addSubMenu("").setIcon(R.drawable.ic_action_overflow);
             sub.add(0, 2, 0, R.string.perfil).setIcon(R.drawable.ic_action_person);
+            sub.add(0, 10, 0, R.string.clientes).setIcon(R.drawable.ic_action_group);
             sub.add(0, 6, 0, R.string.ver_servidor).setIcon(R.drawable.ic_action_cloud);
             sub.add(0, 9, 0, R.string.enviar_link).setIcon(R.drawable.ic_action_send_now);
             sub.add(0, 7, 0, "Busca").setIcon(R.drawable.ic_action_search);
@@ -307,6 +308,9 @@ int soma =
                 email.setType("message/rfc822");
                 startActivity(Intent.createChooser(email, getString(R.string.modo_envio)));
                  break;
+        	case 10:
+        		startActivity(new Intent(MainActivity.this,ClientesActivity.class));
+	 		break;
     	}
         	
         	        	           

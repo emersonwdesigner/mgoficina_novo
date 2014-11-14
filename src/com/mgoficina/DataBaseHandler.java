@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 @SuppressLint("SimpleDateFormat")
 public class DataBaseHandler extends SQLiteOpenHelper {
@@ -28,7 +29,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	private static final String TABLE_STATUS = "trabalhos";
 	private static final String TABLE_LOTES = "lotes";
 	private static final String TABLE_DEFINICOES = "definicoes";
-	private static final String TABLE_CLIENTES = "clientes";
+	static final String TABLE_CLIENTES = "clientes";
 
 	// Tabela usuário
 	static final String KEY_USER_ID = "_id";
@@ -186,9 +187,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	
 	}
 
-	/**
-	* All CRUD(Create, Read, Update, Delete) Operations
-	*/
+	
 	//adicionar status
 	public void addStatus(String var, String var1, String var2, int var3) {
 		//Log.v("aviso", "Adicionar status");
@@ -1410,5 +1409,49 @@ public int contaHome(int tipo) {
 				//int resu = (int)((85 / 153) * 100);
 				return resu;
 			}
+			
+			/**
+			* CRUD - em teste (http://www.devmedia.com.br/realizando-operacoes-de-crud-no-android-com-java/25855)
+			*/
+			
+	public long Insert(String tabela, ContentValues values) {
+		long linhasInseridas = 0;
+		SQLiteDatabase db = this.getWritableDatabase();
+		try {
+			Log.i("response", "Inserindo registro");
+			linhasInseridas = db.insert(tabela, null, values);
+			Log.i("response", "Linhas inseridas: " + String.valueOf(linhasInseridas));
+		} finally {
+			db.close();
+		}
+		return linhasInseridas;
+	}
+	
+	public long Update(String tabela, ContentValues values, String where,
+			String[] whereArgs) {
+		long linhasAlteradas = 0;
+		SQLiteDatabase db = this.getWritableDatabase();
+		try {
+			Log.i("response", "Alterando registro(s)");
+			linhasAlteradas = db.update(tabela, values, where, whereArgs);
+		} finally {
+			db.close();
+			Log.i("response","Linha(s) alterada(s): " + String.valueOf(linhasAlteradas));
+		}
+		return linhasAlteradas;
+	}
+	
+		public int Delete(String tabela, String where, String[] whereArgs) {
+		int linhasExcluidas = 0;
+		SQLiteDatabase db = this.getWritableDatabase();
+		try {
+			Log.i("response", "Iniciando exclusão");
+			linhasExcluidas = db.delete(tabela, where, whereArgs);
+			Log.i("response", "Registro excluído(s): " + String.valueOf(linhasExcluidas));
+		} finally {
+			db.close();
+		}
+		return linhasExcluidas;
+	}
 	
 	}
