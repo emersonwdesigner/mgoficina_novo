@@ -78,9 +78,15 @@ if(db.getDefInt("contagem").equals("y")){
 
 Contact itens = db.singleEdit(key);
 
+if(itens.getImage() == null){
+    
+}else{
 ByteArrayInputStream imageStream = new ByteArrayInputStream(itens.getImage());
 Bitmap theImage = BitmapFactory.decodeStream(imageStream);
 icone.setImageBitmap(theImage);
+}
+
+
 title.setText(itens.getName());
 cliente.setText(itens.getCliente());
 descricao.setText(itens.getDescricao());
@@ -306,14 +312,9 @@ public void novaImagem(View v) {
                      startActivityForResult(intent, 2);
   
                  }else if (items[item].equals(getString(R.string.excluir_foto))) {
-                	Bitmap image = BitmapFactory.decodeResource(getResources(),R.drawable.no_image);
-                	ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                	image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                	byte imageInByte[] = stream.toByteArray();
-                	
                 	
                 	String TxtID = idItem.getText().toString();
-                	db.editar(TxtID, "foto" , null, imageInByte,null, null);
+                	db.editar(TxtID, "foto" , null, null,null, null);
                 	Log.v("aviso", "Edita erro 5");
                     Intent it = new Intent(SingleActivityEdit.this,SingleActivityEdit.class);  
         	    	it.putExtra("ID", TxtID);

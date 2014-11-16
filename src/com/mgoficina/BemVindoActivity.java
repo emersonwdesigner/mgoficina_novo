@@ -63,7 +63,7 @@ public class BemVindoActivity extends Activity {
 	  	 alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 	  	 public void onClick(final DialogInterface dialog, final int which) {
 
-	  		startActivity(new Intent(BemVindoActivity.this, MainActivity.class));
+	  		//startActivity(new Intent(BemVindoActivity.this, MainActivity.class));
 	  	 }
 	  	 });
 	  	alertDialog.setMessage(getString(R.string.sem_conexao));

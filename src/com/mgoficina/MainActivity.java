@@ -24,9 +24,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +40,8 @@ import com.actionbarsherlock.view.SubMenu;
 import com.example.mgoficina.R;
 
 public class MainActivity extends SherlockFragmentActivity {
-	DataBaseHandler db = new DataBaseHandler(this);
+		DataBaseHandler db = new DataBaseHandler(this);
+		Funcoes funcoes = new Funcoes();
 		final Context context = this;
         private ActionBar actionBar;
         private ViewPager viewPager;
@@ -65,13 +68,15 @@ public class MainActivity extends SherlockFragmentActivity {
     		if(user == 0){
     			
     			startActivity(new Intent(MainActivity.this, BemVindoActivity.class));
+    			finish();
     		}else{
     			if(db.VerSenhaVazia()==1){
     				final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
     	    		 alertDialog.setTitle(getString(R.string.aviso));
     	    	  	 alertDialog.setButton(getString(R.string.definir_senha), new DialogInterface.OnClickListener() {
     	    	  	 public void onClick(final DialogInterface dialog, final int which) {
-    	    	  		startActivity(new Intent(MainActivity.this, PerfilActivity.class));
+    	    	  		//startActivity(new Intent(MainActivity.this, PerfilActivity.class));
+    	    	  		definirSenha();
     	    	  	 }
     	    	  	 });
     	    	  	alertDialog.setMessage(getString(R.string.deve_ter_senha));
@@ -464,5 +469,88 @@ int soma =
         	Uri uri = Uri.parse("http://appoficina.atwebpages.com/dados?codigo="+db.getCodigo());
         	 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         	 startActivity(intent);
+        }
+        
+        public void definirSenha(){
+        	final DataBaseHandler db = new DataBaseHandler(this);
+        	// get prompts.xml view
+        		LayoutInflater li = LayoutInflater.from(context);
+        		View promptsView = li.inflate(R.layout.popup_define_senha, null);
+
+        		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+        		// set prompts.xml to alertdialog builder
+        		alertDialogBuilder.setView(promptsView).setTitle(getString(R.string.definir_senha));
+
+        		final EditText ItemSenhaAtual 	= (EditText) promptsView.findViewById(R.id.senhaAtual);
+        		final EditText ItemDigite 		= (EditText) promptsView.findViewById(R.id.digiteSenha);
+        		final EditText ItemConfirme 	= (EditText) promptsView.findViewById(R.id.confirmeSenha);
+        		final LinearLayout temSenha 	= (LinearLayout) promptsView.findViewById(R.id.MostraAtual);
+        		
+        		if(db.VerSenhaVazia() == 1){
+        			temSenha.setVisibility(View.GONE);
+        		}
+        		// set dialog message
+        		alertDialogBuilder
+        			.setCancelable(false)
+        			.setPositiveButton("OK",
+        			  new DialogInterface.OnClickListener() {
+
+        				public void onClick(DialogInterface dialog,int id) {
+        					int habilita = 0;
+        					if(db.VerSenhaVazia() != 1){
+        						
+        						String TxtAtual 	= ItemSenhaAtual.getText().toString();
+        						if(TxtAtual.length()==0){
+        							Toast.makeText(getBaseContext(), getString(R.string.deve_preencher), Toast.LENGTH_LONG).show();
+        						}else{
+        						int RspSenha = db.VerSenha("1", TxtAtual);
+        						
+        						Log.v("aviso", "Ver senha"+String.valueOf(RspSenha));
+        						if(RspSenha == 0){
+        							Toast.makeText(getBaseContext(), getString(R.string.senha_errada), Toast.LENGTH_LONG).show();
+        							habilita = 1;
+        							
+        						}
+        					}
+        					}							
+        					
+        					
+        					//se habilita for 0 salva
+        					
+        					if(habilita == 0){
+        					String TxtDigite 	= ItemDigite.getText().toString();
+        					String TxtConfirme 	= ItemConfirme.getText().toString();
+        					if(TxtDigite.length()==0 || TxtConfirme.length() ==0 ){
+        						Toast.makeText(getBaseContext(), getString(R.string.deve_preencher), Toast.LENGTH_LONG).show();
+        					
+        					}else{
+        					if(TxtDigite.equals(TxtConfirme)){
+        						db.mudaDadosUser(1, Integer.parseInt(TxtDigite) ,"0", "1");
+        				    	Toast.makeText(getBaseContext(), getString(R.string.senha_definida), Toast.LENGTH_LONG).show();
+        				       
+        					}else{
+        						Toast.makeText(getBaseContext(), getString(R.string.senha_incopativeis), Toast.LENGTH_LONG).show();
+        						
+        					}
+        					}
+        					}
+        					 startActivity(new Intent(MainActivity.this,MainActivity.class));
+      				        finish();
+        				}
+        			  })
+        			.setNegativeButton(getString(R.string.cancelar),
+        			  new DialogInterface.OnClickListener() {
+        			    public void onClick(DialogInterface dialog,int id) {
+        				dialog.cancel();
+        			    }
+        			  });
+
+        		// create alert dialog
+        		AlertDialog alertDialog = alertDialogBuilder.create();
+
+        		// show it
+        		alertDialog.show();
+        	
         }
 }

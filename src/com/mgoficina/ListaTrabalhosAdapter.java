@@ -59,11 +59,14 @@ holder.Descricao.setText(funcoes.limitaLetras(picture ._descricao, 25));
 holder.ListaCliente.setText(funcoes.limitaLetras("Cliente: "+picture ._cliente, 25));
 holder.listaId.setText(picture ._idv);
 
-//convert byte to bitmap take from contact class
-byte[] outImage=picture._image;
-ByteArrayInputStream imageStream = new ByteArrayInputStream(outImage);
-Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-holder.thumb.setImageBitmap(theImage);
+if(picture._image == null){
+
+	}else{
+	        byte[] outImage=picture._image;
+	        ByteArrayInputStream imageStream = new ByteArrayInputStream(outImage);
+	        Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+	        holder.thumb.setImageBitmap(theImage);
+	}
 /**
 if (position % 2 == 0) {
 	row.setBackgroundColor(Color.WHITE);

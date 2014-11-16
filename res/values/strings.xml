@@ -62,7 +62,7 @@
     <string name="lote_data">Fechamento em:&#160;</string>
     <string name="detalhes">Detalhes</string>
     <string name="situacao">Situação</string>
-    <string name="nao_itens">Não há itens!&#160;;&#160;(</string>
+    <string name="nao_itens">Não há itens!</string>
     <string name="vazio">Vazio</string>
     <string name="local">Localização</string>
     <string name="defeito_ed">Defeito</string>

@@ -2,6 +2,9 @@ package com.mgoficina;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
@@ -11,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.mgoficina.R;
 
@@ -67,18 +72,25 @@ public class TrabalhosFragment extends SherlockListFragment{
 	        OnItemClickListener listener = new OnItemClickListener() {
 
 				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
+				public void onItemClick(AdapterView<?> arg0, final View arg1,
 						int arg2, long arg3) {
 					TextView param = (TextView) arg1.findViewById(R.id.keyStatus);
+					final TextView qtde = (TextView) arg1.findViewById(R.id.keys);
+					
 					String var1 = param.getText().toString();
-					//Toast.makeText( getActivity().getBaseContext()  , "Long Clicked " + var1 , Toast.LENGTH_SHORT).show();
-					 
+					
+					if(qtde.getText().toString().replace(" ","").substring(0,1).equals("0")){
+						Toast.makeText( getActivity().getBaseContext()  , getString(R.string.nao_itens) , Toast.LENGTH_SHORT).show();
+							
+					}else{
+									 
 					
 					Intent intent = new Intent(getActivity(), ListaTrabalhosActivity.class);
 					
 					intent.putExtra("STATUS", var1);
 					intent.putExtra("TIPO", "os");
 	                startActivity(intent);
+				}
 				}
 	        };
 	 

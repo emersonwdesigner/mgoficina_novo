@@ -694,22 +694,23 @@ containing a value of this type.
         public static final int abs__bright_foreground_disabled_holo_light=0x7f070005;
         public static final int abs__bright_foreground_holo_dark=0x7f070002;
         public static final int abs__bright_foreground_holo_light=0x7f070003;
-        public static final int abs__primary_text_disable_only_holo_dark=0x7f070017;
-        public static final int abs__primary_text_disable_only_holo_light=0x7f070018;
-        public static final int abs__primary_text_holo_dark=0x7f070019;
-        public static final int abs__primary_text_holo_light=0x7f07001a;
+        public static final int abs__primary_text_disable_only_holo_dark=0x7f070018;
+        public static final int abs__primary_text_disable_only_holo_light=0x7f070019;
+        public static final int abs__primary_text_holo_dark=0x7f07001a;
+        public static final int abs__primary_text_holo_light=0x7f07001b;
         public static final int azul_claro=0x7f070009;
         public static final int azul_escuro=0x7f070008;
         public static final int azul_escuro_trans=0x7f070013;
         public static final int azul_mais_claro=0x7f07000a;
-        public static final int black_overlay=0x7f070016;
+        public static final int azul_novo=0x7f070015;
+        public static final int black_overlay=0x7f070017;
         public static final int branco=0x7f07000b;
         public static final int cinza=0x7f07000d;
         public static final int cinza_claro=0x7f07000c;
         public static final int cinza_escuro=0x7f07000e;
         public static final int cinza_mais_escuro=0x7f07000f;
         public static final int cinza_mais_escuro_trans=0x7f070010;
-        public static final int laranja=0x7f070015;
+        public static final int laranja=0x7f070016;
         public static final int opaque_red=0x7f070006;
         public static final int preto=0x7f070014;
         public static final int translucent_red=0x7f070007;
@@ -983,7 +984,8 @@ containing a value of this type.
         public static final int radius_cinza=0x7f02009d;
         public static final int radius_laranja=0x7f02009e;
         public static final int radius_verde=0x7f02009f;
-        public static final int style_tabs=0x7f0200a0;
+        public static final int splash=0x7f0200a0;
+        public static final int style_tabs=0x7f0200a1;
     }
     public static final class id {
         public static final int Descricao=0x7f05004a;
@@ -1209,11 +1211,11 @@ containing a value of this type.
         public static final int activity_lista_search=0x7f03001a;
         public static final int activity_lista_trabalhos=0x7f03001b;
         public static final int activity_main=0x7f03001c;
-        public static final int activity_nova=0x7f03001d;
-        public static final int activity_nova_os=0x7f03001e;
-        public static final int activity_recupera_dados=0x7f03001f;
-        public static final int activity_servidor=0x7f030020;
-        public static final int activity_sobre=0x7f030021;
+        public static final int activity_nova_os=0x7f03001d;
+        public static final int activity_recupera_dados=0x7f03001e;
+        public static final int activity_servidor=0x7f03001f;
+        public static final int activity_sobre=0x7f030020;
+        public static final int activity_splash=0x7f030021;
         public static final int definicoes=0x7f030022;
         public static final int edit_item=0x7f030023;
         public static final int editar_clientes=0x7f030024;
@@ -1247,7 +1249,8 @@ containing a value of this type.
         public static final int recupera_dados=0x7f0c0005;
         public static final int servidor=0x7f0c0006;
         public static final int sobre=0x7f0c0007;
-        public static final int user=0x7f0c0008;
+        public static final int splash=0x7f0c0008;
+        public static final int user=0x7f0c0009;
     }
     public static final class raw {
         public static final int notifica=0x7f040000;

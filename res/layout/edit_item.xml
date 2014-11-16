@@ -14,7 +14,9 @@
          android:layout_width="match_parent"
          android:layout_height="200dp"
          android:gravity="center_horizontal"
-         android:src="@drawable/camera"
+         android:scaleType="centerCrop"
+         android:contentDescription="@string/app_name"
+         android:src="@drawable/no_image_large"
          android:onClick="novaImagem" />
 
      <TextView

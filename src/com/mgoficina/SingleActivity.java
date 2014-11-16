@@ -63,10 +63,15 @@ endCliente	= (TextView) findViewById(R.id.endCliente);
 Log.v("aviso", "single 1");
 
 Contact itens = db.single(key);
-Log.v("aviso", "single 2");
+
+if(itens.getImage() == null){
+}else{
+
 ByteArrayInputStream imageStream = new ByteArrayInputStream(itens.getImage());
 Bitmap theImage = BitmapFactory.decodeStream(imageStream);
 icone.setImageBitmap(theImage);
+}
+
 datahora.setText(getString(R.string.data_hora)+" "+itens.getDatahora());
 status.setText(getString(R.string.situacao)+": "+itens.getStatus());
 title.setText(itens.getName());

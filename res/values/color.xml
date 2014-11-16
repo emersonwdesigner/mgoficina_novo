@@ -15,5 +15,6 @@
    <color name="verde">#027C0C</color>
    <color name="azul_escuro_trans">#90045B77</color>
    <color name="preto">#000000</color>
-   <color name="laranja">#FF8F00</color>
+   <color name="azul_novo">#677E94</color>
+   <color name="laranja">#677E94</color>
 </resources>

@@ -186,12 +186,13 @@ public boolean add_os2(View v){
     		varInt = 0;
     	}
 if(var2.equals("")){
+	/**
 Bitmap image = BitmapFactory.decodeResource(getResources(),
 			R.drawable.no_image);
 ByteArrayOutputStream stream = new ByteArrayOutputStream();
 image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 byte imageInByte[] = stream.toByteArray();
-
+**/
 if(var3.equals("")){
 	Log.v("aviso", "nova3");
 	//db.criaCliente(var6, varInt, var8, 0);
@@ -213,7 +214,7 @@ if(var3.equals("")){
 	var8 	= var10;
 }
 //numero, descrição, foto, cliente, datahora, status(1 - bancada), localização, defeito, acessórios, obsservações, valor
-long ultimo = db.addContact(new Contact(var0, var1, imageInByte, var3, sdf.format(d), "1", "",0,var4,var5,"",0.00,0,0,0,0,varInt,var8));
+long ultimo = db.addContact(new Contact(var0, var1, null, var3, sdf.format(d), "1", "",0,var4,var5,"",0.00,0,0,0,0,varInt,var8));
 
 Log.v("aviso", "ultimo inserido "+String.valueOf(ultimo));
 if(db.getDefInt("contagem").equals("y")){

@@ -191,6 +191,7 @@ public void definirSenha(final View v){
 						db.mudaDadosUser(1, Integer.parseInt(TxtDigite) ,"0", "1");
 				    	Toast.makeText(getBaseContext(), getString(R.string.senha_definida), Toast.LENGTH_LONG).show();
 				        startActivity(new Intent(PerfilActivity.this,PerfilActivity.class));
+				        finish();
 					}else{
 						Toast.makeText(getBaseContext(), getString(R.string.senha_incopativeis), Toast.LENGTH_LONG).show();
 					}
