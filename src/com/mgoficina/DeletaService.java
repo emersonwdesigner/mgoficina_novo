@@ -36,9 +36,11 @@ public class DeletaService extends Service implements Runnable {
 		final String codigo = db.getCodigo();
 		final HttpClient client = new DefaultHttpClient();
 		final HttpPost post = new HttpPost("http://appoficina.atwebpages.com/deleta_iten.php");
+		final HttpPost postClientes = new HttpPost("http://appoficina.atwebpages.com/deleta_cliente.php");
 		
 		final List<NameValuePair> pairs = new ArrayList<NameValuePair>();	
-		final List<Contact> itens = db.getLotesDeletar();
+		final List<Contact> itens 		= db.getLotesDeletar();
+		final List<Contact> clientes 	= db.getClientesDeletar();
 		
 		
 		new Thread(new Runnable() {
@@ -71,9 +73,43 @@ public class DeletaService extends Service implements Runnable {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-		}	
+		}
+		
+		
 	       } 
 	  	 
+	  	 
+	  	for (Contact cl : clientes) {
+			try {
+				pairs.add(new BasicNameValuePair("codigo", codigo));
+				pairs.add(new BasicNameValuePair("id", cl.getName()));
+				
+				Log.v("aviso", "cliente para deletar " + cl.getName());
+				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(pairs);
+				
+				// RESULTADOS DOS ITENS
+		        postClientes.setEntity(ent);
+		        HttpResponse responsePOST = client.execute(postClientes);  
+		        String responseBody = EntityUtils.toString(responsePOST.getEntity());
+		        
+		        Log.v("aviso", "Resposta " + responseBody);
+		        
+		        // "N" o iten não existe no BD do server
+		        // "Y" o iten existe no BD do server e foi deletado
+				if(responseBody.contains("Y")){
+				db.delete(cl.getName(), true);
+				db.Delete(DataBaseHandler.TABLE_CLIENTES, DataBaseHandler.KEY_CLIENTE_ENDERECO+"=?", new String[] {cl.getName()});
+				}else if(responseBody.contains("N")){
+				db.delete(cl.getName(), true);		
+				}
+				
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			
+		       } 
 	  	Log.v("aviso", "Deletados excluidos");
 	         }}).start();
 		

@@ -3,6 +3,8 @@
 
     <string name="app_name">MGOficina</string>
     <string name="aviso">Aviso!</string>
+    <string name="excluido">Excluído!</string>
+    <string name="novo">&#160;novo&#160;</string>
     <string name="bem_vindo">Bem Vindo!</string>
     <string name="bem_vindo_ao">Bem vindo ao MGOficina</string>
     <string name="descricao_app">"Total controle das suas ordens de serviço na palma da mão."</string>
@@ -42,7 +44,7 @@
     <string name="data_hora">Data/hora: </string>
     <string name="os">Orden de serviço</string>
     <string name="busca_avancada">Busca avançada</string>
-    <string name="buscar_em">Buscar em:</string>
+    <string name="buscar_em">Pesquisar em:</string>
     <string name="resultado_para">Resultado para</string>
     <string name="palavra_chave">Palavra chave:</string>
     <string name="defeito">Defeito:</string>

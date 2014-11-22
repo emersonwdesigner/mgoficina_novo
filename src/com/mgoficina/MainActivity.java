@@ -54,8 +54,11 @@ public class MainActivity extends SherlockFragmentActivity {
         	//ver se tem excluídos para tirar do server
         	if(verificaConexao()){
         		int excluidos = db.getLotesDeletar().size();
+        		int excluidosClientes = db.getClientesDeletar().size();
         		//Log.v("aviso", "Tem excliudos"+ String.valueOf(excluidos));
-        		if(excluidos > 0){
+        		
+        		int totalExcluir = excluidos + excluidosClientes;
+        		if(totalExcluir > 0){
         			
         		startService(new Intent("MGO_DELETA"));
         	}
@@ -214,11 +217,11 @@ int soma =
             acao.add(0, 4, 0, R.string.sincronizar).setIcon(R.drawable.ic_action_import_export);
             
             SubMenu sub = menu.addSubMenu("").setIcon(R.drawable.ic_action_overflow);
+            sub.add(0, 7, 0, R.string.pesquisar).setIcon(R.drawable.ic_action_search);
             sub.add(0, 2, 0, R.string.perfil).setIcon(R.drawable.ic_action_person);
             sub.add(0, 10, 0, R.string.clientes).setIcon(R.drawable.ic_action_group);
             sub.add(0, 6, 0, R.string.ver_servidor).setIcon(R.drawable.ic_action_cloud);
             sub.add(0, 9, 0, R.string.enviar_link).setIcon(R.drawable.ic_action_send_now);
-            sub.add(0, 7, 0, "Busca").setIcon(R.drawable.ic_action_search);
             sub.add(0, 8, 0, R.string.sobre).setIcon(R.drawable.ic_action_about);
             sub.add(0, 5, 0, R.string.action_sair).setIcon(R.drawable.ic_action_return_from_full_screen);
             

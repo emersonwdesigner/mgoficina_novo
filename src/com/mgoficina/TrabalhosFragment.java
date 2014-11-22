@@ -42,7 +42,7 @@ public class TrabalhosFragment extends SherlockListFragment{
 			   /** Binds the Cursor column defined by the specified index to the specified view */
 			   public boolean setViewValue(View view, Cursor cursor, int columnIndex){
 			       if(view.getId() == R.id.keys){
-			    	   Log.v("aviso",cursor.getString(columnIndex));
+			    	  // Log.v("aviso",cursor.getString(columnIndex));
 			    	   icon = (TextView) view.findViewById(R.id.keys);
 			    	   String conta = String.valueOf(db.conta(cursor.getString(columnIndex)));
 			    	   String total="";

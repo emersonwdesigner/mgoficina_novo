@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ holder.Descricao = (TextView)row.findViewById(R.id.Descricao);
 holder.thumb = (ImageView)row.findViewById(R.id.thumb);
 holder.ListaCliente = (TextView)row.findViewById(R.id.ListaCliente);
 holder.listaId = (TextView)row.findViewById(R.id.ListaId);
+holder.novo = (TextView)row.findViewById(R.id.novo);
 
 
 row.setTag(holder);
@@ -54,9 +56,14 @@ else
 holder = (ImageHolder)row.getTag();
 }
 Contact picture = data.get(position);
-holder.numOrdem.setText("Ordem de serviço: "+picture ._name);
+holder.numOrdem.setText("Ordem de serviço: "+picture ._name+" ");
 holder.Descricao.setText(funcoes.limitaLetras(picture ._descricao, 25));
-holder.ListaCliente.setText(funcoes.limitaLetras("Cliente: "+picture ._cliente, 25));
+if(picture._cliente == null){
+
+holder.ListaCliente.setText("Cliente: "+ context.getResources().getString(R.string.excluido));
+}else{
+	holder.ListaCliente.setText(funcoes.limitaLetras("Cliente: "+picture ._cliente, 25));	
+}
 holder.listaId.setText(picture ._idv);
 
 if(picture._image == null){
@@ -67,6 +74,12 @@ if(picture._image == null){
 	        Bitmap theImage = BitmapFactory.decodeStream(imageStream);
 	        holder.thumb.setImageBitmap(theImage);
 	}
+
+if(picture._entrada == 0){
+	row.setBackgroundColor(row.getResources().getColor(R.color.verde_agua));
+	//row.setBackgroundColor(Color.parseColor("#CFFDD4"));
+	holder.novo.setVisibility(View.VISIBLE);
+}
 /**
 if (position % 2 == 0) {
 	row.setBackgroundColor(Color.WHITE);
@@ -79,11 +92,7 @@ return row;
 static class ImageHolder
 {
 ImageView thumb;
-TextView listaId;
-TextView numOrdem;
-TextView txtTitle;
-TextView Descricao;
-TextView ListaCliente;
+TextView listaId, numOrdem, txtTitle, Descricao, ListaCliente, novo;
 }
 
 

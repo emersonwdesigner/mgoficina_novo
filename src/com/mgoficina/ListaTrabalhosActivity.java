@@ -32,6 +32,7 @@ Bundle bundle = this.getIntent().getExtras();
 
 String coluna = bundle.get("STATUS").toString();
 String tipo = bundle.get("TIPO").toString();
+
 //Log.v("aviso", coluna);
 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#007ca5")));
 
@@ -41,19 +42,19 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 List<Contact> contacts = null;
 
 if(tipo.equals("lote")){
-	contacts = db.getTrabalhosOpcao(coluna, 2);
+	contacts = db.getTrabalhosOpcao(coluna, 2, null, null);
 	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\"><b>"+getString(R.string.lote_n)+ coluna+"</b></font>"));
 	
 	//Log.v("aviso", "lote");
 }else if(tipo.equals("os")) {
 	trab = db.getTitleTrabalhos(coluna);
-	contacts = db.getTrabalhosOpcao(coluna, 3);
+	contacts = db.getTrabalhosOpcao(coluna, 3, null, null);
 	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\"><b>"+trab+"</b></font>"));
 	getSupportActionBar().setSubtitle(Html.fromHtml("<font color=\"#CCD3D6\"><b>"+String.valueOf(db.conta(coluna))+"</b></font>"));
 	//Log.v("aviso", "false");
 }else if(tipo.equals("entrada")) {
 	trab = db.getTitleTrabalhos(coluna);
-	contacts = db.getTrabalhosOpcao(coluna, 1);
+	contacts = db.getTrabalhosOpcao(coluna, 1, null, null);
 	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\"><b>"+getString(R.string.caixa_entrada)+"</b></font>"));
 	
 	getSupportActionBar().setSubtitle(Html.fromHtml("<font color=\"#CCD3D6\"><b>"+String.valueOf(db.contaHome(1))+"</b></font>"));
@@ -61,9 +62,17 @@ if(tipo.equals("lote")){
 
 }else if(tipo.equals("dados")) {
 	trab = db.getTitleTrabalhos(coluna);
-	contacts = db.getTrabalhosOpcao(coluna, 4);
+	contacts = db.getTrabalhosOpcao(coluna, 4, null, null);
 	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\"><b>"+getString(R.string.dados_nao)+"</b></font>"));
 	getSupportActionBar().setSubtitle(Html.fromHtml("<font color=\"#CCD3D6\"><b>"+String.valueOf(db.contaHome(2))+"</b></font>"));
+	//Log.v("aviso", "false");
+
+}else if(tipo.equals("busca")) {
+	String tabela = bundle.get("COLUNA").toString();
+	String key = bundle.get("KEY").toString();
+	contacts = db.getTrabalhosOpcao(coluna, 5, tabela, key);
+	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\"><b>"+getString(R.string.resultado_para) +": "+ key +"</b></font>"));
+	getSupportActionBar().setSubtitle(Html.fromHtml("<font color=\"#CCD3D6\"><b>"+String.valueOf(contacts.size())+"</b></font>"));
 	//Log.v("aviso", "false");
 
 }

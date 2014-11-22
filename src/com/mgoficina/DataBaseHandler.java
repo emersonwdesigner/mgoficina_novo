@@ -25,7 +25,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
 	// Tabelas
 	private static final String TABLE_USER = "user";
-	private static final String TABLE_CONTACTS = "os";
+	static final String TABLE_CONTACTS = "os";
 	private static final String TABLE_STATUS = "trabalhos";
 	private static final String TABLE_LOTES = "lotes";
 	private static final String TABLE_DEFINICOES = "definicoes";
@@ -52,7 +52,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	static final String KEY_IMAGE = "image";
 	static final String KEY_DESCRICAO = "descricao";
 	static final String KEY_CLIENTE = "cliente";
-	private static final String KEY_DATAHORA = "datahora";
+	static final String KEY_DATAHORA = "datahora";
 	private static final String KEY_STATUS = "status";
 	private static final String KEY_LOCAL = "local";
 	private static final String KEY_LIGA = "liga";
@@ -86,6 +86,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	static final String KEY_CLIENTE_TELEFONE = "cliente_telefone";
 	static final String KEY_CLIENTE_ENDERECO = "cliente_endereco";
 	static final String KEY_CLIENTE_EXPORTA = "cliente_exporta";
+	static final String KEY_CLIENTE_DELETADO = "cliente_deletado";
 		
 	public DataBaseHandler(Context context) {
 	super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -154,10 +155,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 				
 				String CREATE_CLIENTE_TABLE = "CREATE TABLE " + TABLE_CLIENTES + "("
 						+ KEY_CLIENTE_ID + " INTEGER PRIMARY KEY," 
+						+ KEY_CLIENTE_ID_OS + " TEXT,"
 						+ KEY_CLIENTE_NAME + " TEXT,"
 						+ KEY_CLIENTE_TELEFONE + " INTEGER,"
 						+ KEY_CLIENTE_ENDERECO + " TEXT,"
-						+ KEY_CLIENTE_EXPORTA + " INTEGER)";
+						+ KEY_CLIENTE_EXPORTA + " INTEGER," 
+						+ KEY_CLIENTE_DELETADO + " INTEGER)";
 				db.execSQL(CREATE_CLIENTE_TABLE);		
 			//INSERIR  OU IGNORE INTO bookmarks ( users_id , lessoninfo_id )  VALUES ( 123 ,  456 )
 			db.execSQL("INSERT INTO "+TABLE_STATUS+"("+KEY_STATUS_KEY+", "+KEY_STATUS_NAME+", "+KEY_STATUS_INFO+", "+KEY_STATUS_ICON+") VALUES(1, 'Para orçamento', 'Equipamento para orçamento','"+R.drawable.ic_action_paste +"')");
@@ -167,7 +170,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 			db.execSQL("INSERT INTO "+TABLE_STATUS+"("+KEY_STATUS_KEY+", "+KEY_STATUS_NAME+", "+KEY_STATUS_INFO+", "+KEY_STATUS_ICON+") VALUES(5, 'Devolvidos', 'Devolvido sem reparo','"+R.drawable.ic_action_undo+"')");
 			db.execSQL("INSERT INTO "+TABLE_STATUS+"("+KEY_STATUS_KEY+", "+KEY_STATUS_NAME+", "+KEY_STATUS_INFO+", "+KEY_STATUS_ICON+") VALUES(6, 'Executando', 'Executando o reparo','"+R.drawable.ic_action_play_over_video+"')");
 			
-			db.execSQL("INSERT INTO "+TABLE_CLIENTES+"("+KEY_CLIENTE_NAME+", "+KEY_CLIENTE_TELEFONE+", "+KEY_CLIENTE_ENDERECO+", "+KEY_CLIENTE_EXPORTA+") VALUES('Emerson', 84387315, 'Jose Gomes',0)");
+             
 			
 	}
 
@@ -253,7 +256,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 				public Cursor getAllClientes() {
 					
 				// Select All Query
-				String selectQuery = "SELECT * FROM "+TABLE_CLIENTES+" ORDER BY "+KEY_CLIENTE_ID+" ASC";
+				String selectQuery = "SELECT * FROM "+TABLE_CLIENTES+" WHERE "+KEY_CLIENTE_DELETADO+"=0 ORDER BY "+KEY_CLIENTE_ID+" ASC";
 
 				SQLiteDatabase db = this.getWritableDatabase();
 				Cursor c = db.rawQuery(selectQuery, null);
@@ -277,10 +280,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 				if (cursor.moveToFirst()) {
 				do {
 				Contact contact = new Contact();
-				contact.setID(cursor.getInt(0));
-				contact.setName(cursor.getString(1));
-				contact.setLiga(cursor.getInt(2));
-				contact.setDescricao(cursor.getString(3));
+				contact.setIdv(cursor.getString(1));
+				contact.setName(cursor.getString(2));
+				contact.setLiga(cursor.getInt(3));
+				contact.setDescricao(cursor.getString(4));
 				// Adding contact to list
 				contactList.add(contact);
 				} while (cursor.moveToNext());
@@ -303,7 +306,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 						
 					//String str = String.valueOf(id); 
 					// updating row
-					return db.update(TABLE_CLIENTES, values, KEY_CLIENTE_ID + " = ?",
+					return db.update(TABLE_CLIENTES, values, KEY_CLIENTE_ID_OS + " = ?",
 					new String[] { id });
 
 					}
@@ -513,7 +516,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		}
 		
 		// Getting All Trabalhos
-		public List<Contact> getTrabalhosOpcao(String var, int tipo) {
+		public List<Contact> getTrabalhosOpcao(String var, int tipo, String tabela, String key) {
 			
 			//Log.v("aviso", "Lista trabalhos");
 			List<Contact> contactList = new ArrayList<Contact>();
@@ -522,19 +525,33 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 			String selectQuery = null;
 			
 		if(tipo == 1){
-			//Log.v("aviso", "Lista entrada");
-			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" WHERE "+KEY_ENTRADA+"='0' AND "+KEY_LIGA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
+			
+			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+
+					" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+					" WHERE "+KEY_ENTRADA+"='0' AND "+KEY_LIGA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
 		}else if(tipo == 2){
 		
-			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" WHERE "+KEY_LOTE+"='"+var+"' AND "+KEY_LIGA+"='1' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
+			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+
+					" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+					" WHERE "+KEY_LOTE+"='"+var+"' AND "+KEY_LIGA+"='1' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
 		}else if(tipo == 3){
 			//Log.v("aviso", "Lista status");
-			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" WHERE "+KEY_STATUS+"='"+var+"'  AND "+KEY_LIGA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
+			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+ 
+					" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+					" WHERE "+KEY_STATUS+"='"+var+"'  AND "+KEY_LIGA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
 		}else if(tipo == 4){
 			//Log.v("aviso", "Lista trabalhos false");
-			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" WHERE "+KEY_EXPORTA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
+			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+ 
+					" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+					" WHERE "+KEY_EXPORTA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
+		}else if(tipo == 5){
+			//Log.v("aviso", "Lista trabalhos false");
+			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+ 
+					" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+					" WHERE "+tabela+" LIKE '%"+key+"%' AND "+KEY_EXPORTA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
 		}
 
+		Log.v("aviso", selectQuery);
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
@@ -544,8 +561,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		contact.setIdv(cursor.getString(0));
 		contact.setName(cursor.getString(1));
 		contact.setDescricao(cursor.getString(2));
+		contact.setEntrada(cursor.getInt(15));
 		contact.setImage(cursor.getBlob(3));
-		contact.setCliente(cursor.getString(4));
+		contact.setCliente(cursor.getString(21));
 		// Adding contact to list
 		contactList.add(contact);
 		} while (cursor.moveToNext());
@@ -673,9 +691,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	
 public List<Contact> getLotesDeletar() {
 			
-			////Log.v("aviso", "SELECT * FROM "+TABLE_CONTACTS+" WHERE "+KEY_LIGA+"='0' ORDER BY "+KEY_NAME+" DESC");
 		List<Contact> contactList = new ArrayList<Contact>();
-		
 		String 	selectQuery;
 		// Select All Query
 		selectQuery = "SELECT * FROM "+TABLE_CONTACTS +" WHERE "+KEY_DELETADO+" = '1'";  
@@ -700,7 +716,32 @@ public List<Contact> getLotesDeletar() {
 		// return contact list
 		return contactList;
 
-		} 
+		}
+
+public List<Contact> getClientesDeletar() {
+	
+	List<Contact> contactList = new ArrayList<Contact>();
+	String 	selectQuery;
+	// Select All Query
+	selectQuery = "SELECT * FROM "+TABLE_CLIENTES +" WHERE "+KEY_CLIENTE_DELETADO+" = '1'";  
+	
+	SQLiteDatabase db = this.getWritableDatabase();
+	Cursor cursor = db.rawQuery(selectQuery, null);
+	if (cursor.moveToFirst()) {
+	do {
+	Contact contact = new Contact();
+	contact.setName(cursor.getString(cursor.getColumnIndex(KEY_CLIENTE_ID_OS)));
+	// Adding contact to list
+	contactList.add(contact);
+	} while (cursor.moveToNext());
+	}
+	// close inserting data from database
+	db.close();
+	cursor.close();
+	// return contact list
+	return contactList;
+
+	}
 public Contact getUser() {
 		
 		String 	selectQuery = "SELECT * FROM "+TABLE_USER +"  LIMIT 1 ";  
@@ -789,9 +830,12 @@ return contactList;
 		public List<Contact> searchOs(String var, String var1) {
 		List<Contact> contactList = new ArrayList<Contact>();
 		// Select All Query
-		String selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" INNER JOIN "+TABLE_STATUS+" ON "+TABLE_CONTACTS+"."+KEY_STATUS+" = "+TABLE_STATUS+"."+KEY_STATUS_KEY+" WHERE "+var+" LIKE '%"+var1+"%' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" ASC";
+		String selectQuery = "SELECT * FROM "+TABLE_CONTACTS+ 
+				" INNER JOIN "+TABLE_STATUS+" ON "+TABLE_CONTACTS+"."+KEY_STATUS+" = "+TABLE_STATUS+"."+KEY_STATUS_KEY+ 
+				" INNER JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+				" WHERE "+var+" LIKE '%"+var1+"%' AND "+KEY_DELETADO+"='0' ORDER BY "+TABLE_CONTACTS+"."+KEY_NAME+" ASC";
 		//String selectQuery = "SELECT * FROM contacts WHERE status='"+var+"' ORDER BY name ASC";
-		//Log.v("aviso", selectQuery);
+		Log.v("aviso", selectQuery);
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		// looping through all rows and adding to list
@@ -803,7 +847,7 @@ return contactList;
 		contact.setDescricao(cursor.getString(2));
 		contact.setLiga(cursor.getInt(8));
 		contact.setImage(cursor.getBlob(3));
-		contact.setCliente(cursor.getString(4));
+		contact.setCliente(cursor.getString(26));
 		contact.setStatus(cursor.getString(21));
 		// Adding contact to list
 		contactList.add(contact);
@@ -817,46 +861,15 @@ return contactList;
 
 		}
 		
-		// Single igual ao list contacts
-		
-				public List<Contact> singleOs(String var) {
-				List<Contact> contactList = new ArrayList<Contact>();
-				// Select All Query
-				String selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" INNER JOIN "+TABLE_STATUS+" ON "+TABLE_CONTACTS+"."+KEY_STATUS+" = "+TABLE_STATUS+"."+KEY_STATUS_KEY+" WHERE "+TABLE_CONTACTS+"."+KEY_ID+"='"+var+"'";
-
-				SQLiteDatabase db = this.getWritableDatabase();
-				Cursor cursor = db.rawQuery(selectQuery, null);
-				// looping through all rows and adding to list
-				if (cursor.moveToFirst()) {
-				do {
-				Contact contact = new Contact();
-				contact.setID(Integer.parseInt(cursor.getString(0)));
-				contact.setName(cursor.getString(1));
-				contact.setIdv(cursor.getString(0));
-				contact.setDescricao(cursor.getString(2));
-				contact.setImage(cursor.getBlob(3));
-				contact.setCliente(cursor.getString(4));
-				contact.setDatahora(cursor.getString(5));
-				contact.setStatus(cursor.getString(13));
-				contact.setLocal(cursor.getString(7));
-				contact.setDefeito(cursor.getString(9));
-				contact.setAcessorio(cursor.getString(10));
-				// Adding contact to list
-				contactList.add(contact);
-				} while (cursor.moveToNext());
-				}
-				// close inserting data from database
-				db.close();
-				cursor.close();
-				// return contact list
-				return contactList;
-				}
 			
 				// Editar Single
 				
 				public Contact single(String var) {
 					// Select All Query
-					String selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" INNER JOIN "+TABLE_STATUS+" ON "+TABLE_CONTACTS+"."+KEY_STATUS+" = "+TABLE_STATUS+"."+KEY_STATUS_KEY+" WHERE "+TABLE_CONTACTS+"."+KEY_ID+"='"+var+"' AND "+KEY_DELETADO+"='0'";
+					String selectQuery = "SELECT * FROM "+TABLE_CONTACTS+ 
+							" INNER JOIN "+TABLE_STATUS+" ON "+TABLE_CONTACTS+"."+KEY_STATUS+" = "+TABLE_STATUS+"."+KEY_STATUS_KEY+ 
+							" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+							" WHERE "+TABLE_CONTACTS+"."+KEY_ID+"='"+var+"' AND "+KEY_DELETADO+"='0'";
 
 					SQLiteDatabase db = this.getWritableDatabase();
 					Cursor cursor = db.rawQuery(selectQuery, null);
@@ -867,7 +880,7 @@ return contactList;
 						contact.setDatahora(cursor.getString(5));
 						contact.setStatus(cursor.getString(21));
 						contact.setName(cursor.getString(1));
-						contact.setCliente(cursor.getString(4));
+						contact.setCliente(cursor.getString(26));
 						contact.setDescricao(cursor.getString(2));
 						contact.setLocal(cursor.getString(7));
 						contact.setDefeito(cursor.getString(9));
@@ -878,8 +891,8 @@ return contactList;
 						contact.setLiga(cursor.getInt(8));
 						contact.setExporta(cursor.getInt(14));
 						contact.setEntrada(cursor.getInt(15));
-						contact.setTelefonecliente(cursor.getInt(17));
-						contact.setEnderecocliente(cursor.getString(18));
+						contact.setTelefonecliente(cursor.getInt(27));
+						contact.setEnderecocliente(cursor.getString(28));
 						
 						
 					}
@@ -893,7 +906,10 @@ return contactList;
 				
 				public Contact singleEdit(String var) {
 				// Select All Query
-				String selectQuery = "SELECT * FROM "+TABLE_CONTACTS+" INNER JOIN "+TABLE_STATUS+" ON "+TABLE_CONTACTS+"."+KEY_STATUS+" = "+TABLE_STATUS+"."+KEY_STATUS_KEY+" WHERE "+TABLE_CONTACTS+"."+KEY_ID+"='"+var+"' AND "+KEY_DELETADO+"='0'";
+				String selectQuery = "SELECT * FROM "+TABLE_CONTACTS+ 
+						" INNER JOIN "+TABLE_STATUS+" ON "+TABLE_CONTACTS+"."+KEY_STATUS+" = "+TABLE_STATUS+"."+KEY_STATUS_KEY+ 
+						" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+						" WHERE "+TABLE_CONTACTS+"."+KEY_ID+"='"+var+"' AND "+KEY_DELETADO+"='0'";
 
 				SQLiteDatabase db = this.getWritableDatabase();
 				Cursor cursor = db.rawQuery(selectQuery, null);
@@ -902,7 +918,7 @@ return contactList;
 				if (cursor.moveToFirst()) {
 					contact.setImage(cursor.getBlob(3));
 					contact.setName(cursor.getString(1));
-					contact.setCliente(cursor.getString(4));
+					contact.setCliente(cursor.getString(26));
 					contact.setDescricao(cursor.getString(2));
 					contact.setLocal(cursor.getString(7));
 					contact.setDefeito(cursor.getString(9));
@@ -910,8 +926,8 @@ return contactList;
 					contact.setObs(cursor.getString(11));
 					contact.setValor(cursor.getDouble(12));
 					contact.setIdv(cursor.getString(0));
-					contact.setTelefonecliente(cursor.getInt(17));
-					contact.setEnderecocliente(cursor.getString(18));
+					contact.setTelefonecliente(cursor.getInt(27));
+					contact.setEnderecocliente(cursor.getString(28));
 					
 				}
 				// close inserting data from database
@@ -1418,17 +1434,14 @@ public int contaHome(int tipo) {
 		long linhasInseridas = 0;
 		SQLiteDatabase db = this.getWritableDatabase();
 		try {
-			Log.i("response", "Inserindo registro");
 			linhasInseridas = db.insert(tabela, null, values);
-			Log.i("response", "Linhas inseridas: " + String.valueOf(linhasInseridas));
 		} finally {
 			db.close();
 		}
 		return linhasInseridas;
 	}
 	
-	public long Update(String tabela, ContentValues values, String where,
-			String[] whereArgs) {
+	public long Update(String tabela, ContentValues values, String where,String[] whereArgs) {
 		long linhasAlteradas = 0;
 		SQLiteDatabase db = this.getWritableDatabase();
 		try {
@@ -1453,5 +1466,20 @@ public int contaHome(int tipo) {
 		}
 		return linhasExcluidas;
 	}
+		
+		// tira cliente da OS
+		public int removeClienteOs(String cliente) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.putNull(KEY_CLIENTE);
+
+		// updating row
+		return db.update(TABLE_CONTACTS, values, KEY_CLIENTE + " = ?",
+		new String[] { cliente });
+
+		}
+
+		
 	
 	}

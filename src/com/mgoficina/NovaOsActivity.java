@@ -47,10 +47,12 @@ public class NovaOsActivity extends SherlockActivity implements OnItemClickListe
     ImageView viewImage;
     Button b;
     final DataBaseHandler db = new DataBaseHandler(this);
+    Funcoes funcoes = new Funcoes();
     ContentValues values = new ContentValues();
     EditText numero, cliente, novoCliente, novoTelefone, novoEndereco;
     LinearLayout LayOs, LayCliente, LayNovoCliente;
     String[] from;
+    String idCliente;
     int[] to;
     Cursor cursor;
     ListView list;
@@ -133,7 +135,6 @@ public class NovaOsActivity extends SherlockActivity implements OnItemClickListe
 public boolean add_os2(View v){  
 		EditText descricao = (EditText) findViewById(R.id.descricao);
 		String var1 = removerAcentos(descricao.getText().toString());
-		
 	   	String var0 = numero.getText().toString();
 	   	
      if(var0.equals("")){
@@ -164,14 +165,14 @@ public boolean add_os2(View v){
     	
     	
     	String var2 = foto.getText().toString();
-    	String var3 = removerAcentos(cliente.getText().toString());
+    	//String var3 = removerAcentos(cliente.getText().toString());
     	String var4 = removerAcentos(defeito.getText().toString());
     	String var5 = removerAcentos(acessorio.getText().toString());
     	String var6 = removerAcentos(novoCliente.getText().toString());
     	String var7 = novoTelefone.getText().toString();
     	String var8 = removerAcentos(novoEndereco.getText().toString());
-    	String var9 = tTelefone.getText().toString();
-    	String var10 = tEndereco.getText().toString();
+    	//String var9 = tTelefone.getText().toString();
+    	//String var10 = tEndereco.getText().toString();
     	
     	// data
     	Date d = new Date();
@@ -186,37 +187,27 @@ public boolean add_os2(View v){
     		varInt = 0;
     	}
 if(var2.equals("")){
-	/**
-Bitmap image = BitmapFactory.decodeResource(getResources(),
-			R.drawable.no_image);
-ByteArrayOutputStream stream = new ByteArrayOutputStream();
-image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-byte imageInByte[] = stream.toByteArray();
-**/
-if(var3.equals("")){
-	Log.v("aviso", "nova3");
-	//db.criaCliente(var6, varInt, var8, 0);
+	
+if(tId.getText().toString().equals("")){
+	
+	idCliente = funcoes.gerarIdCliente();
 	//inserindo usando o crud				
 					values.put(DataBaseHandler.KEY_CLIENTE_NAME, var6);
+					values.put(DataBaseHandler.KEY_CLIENTE_ID_OS, idCliente );
 					values.put(DataBaseHandler.KEY_CLIENTE_TELEFONE, varInt);
 					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, var8);
 					values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
+					values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 0);
 
 	db.Insert(DataBaseHandler.TABLE_CLIENTES, values);
-	var3 = var6;
+	
 }else{
-	int varInt9=0;
-	try {
-		varInt9 = Integer.parseInt(var9);
-	} catch(NumberFormatException nfe) {
-	} 
-	varInt 	= varInt9;
-	var8 	= var10;
+	idCliente = tId.getText().toString();	
 }
+					
 //numero, descrição, foto, cliente, datahora, status(1 - bancada), localização, defeito, acessórios, obsservações, valor
-long ultimo = db.addContact(new Contact(var0, var1, null, var3, sdf.format(d), "1", "",0,var4,var5,"",0.00,0,0,0,0,varInt,var8));
+long ultimo = db.addContact(new Contact(var0, var1, null, idCliente, sdf.format(d), "1", "",0,var4,var5,"",0.00,0,0,0,0,varInt,var8));
 
-Log.v("aviso", "ultimo inserido "+String.valueOf(ultimo));
 if(db.getDefInt("contagem").equals("y")){
 	db.mudaIdAuto(String.valueOf(ultimo));
 	
@@ -228,22 +219,24 @@ Bitmap image = ShrinkBitmap(var2, 300, 200);
 ByteArrayOutputStream stream = new ByteArrayOutputStream();
 image.compress(Bitmap.CompressFormat.JPEG, 70, stream);
 byte imageInByte[] = stream.toByteArray();
-if(var3.equals("")){
-	Log.v("aviso", "nova3");
-	db.criaCliente(var6, varInt, var8, 0);
-	var3 	= var6;
+if(tId.getText().toString().equals("")){
+	
+	idCliente = funcoes.gerarIdCliente();
+	//inserindo usando o crud				
+					values.put(DataBaseHandler.KEY_CLIENTE_NAME, var6);
+					values.put(DataBaseHandler.KEY_CLIENTE_ID_OS, idCliente );
+					values.put(DataBaseHandler.KEY_CLIENTE_TELEFONE, varInt);
+					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, var8);
+					values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
+					values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 0);
+
+	db.Insert(DataBaseHandler.TABLE_CLIENTES, values);
 	
 }else{
-	int varInt9=0;
-	try {
-		varInt9 = Integer.parseInt(var9);
-	} catch(NumberFormatException nfe) {
-	} 
-	varInt 	= varInt9;
-	var8 	= var10;
+	idCliente = tId.getText().toString();	
 }
 //numero, descrição, foto, cliente, datahora, status(1 - bancada), localização, defeito, acessórios, obsservações, valor
-long ultimo = db.addContact(new Contact(var0, var1, imageInByte, var3, sdf.format(d), "1", "",0,var4,var5,"",0.00,0,0,0,0,varInt,var8));
+long ultimo = db.addContact(new Contact(var0, var1, imageInByte, idCliente, sdf.format(d), "1", "",0,var4,var5,"",0.00,0,0,0,0,varInt,var8));
 if(db.getDefInt("contagem").equals("y")){
 	db.mudaIdAuto(String.valueOf(ultimo));
 	
@@ -292,7 +285,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             String picturePath = c.getString(columnIndex);
             c.close();
             Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-            Log.w("path of image from gallery......******************.........", picturePath+"");
             
             EditText url = (EditText) findViewById(R.id.url);
             url.setText(picturePath);
@@ -342,11 +334,12 @@ Bitmap ShrinkBitmap(String file, int width, int height){
 
 public void novoCliente(View v){
 	cliente.setText("");
+	tId.setText("");
 	LayNovoCliente.setVisibility(View.VISIBLE);
 	LayCliente.setVisibility(View.GONE);
 }
 public void clientes(View v){
-	from = new String[] {DataBaseHandler.KEY_CLIENTE_NAME, DataBaseHandler.KEY_CLIENTE_TELEFONE, DataBaseHandler.KEY_CLIENTE_ENDERECO, DataBaseHandler.KEY_CLIENTE_ID};
+	from = new String[] {DataBaseHandler.KEY_CLIENTE_NAME, DataBaseHandler.KEY_CLIENTE_TELEFONE, DataBaseHandler.KEY_CLIENTE_ENDERECO, DataBaseHandler.KEY_CLIENTE_ID_OS};
     
     // Ids of views in listview_layout
     to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.keyId};        
@@ -423,13 +416,13 @@ public void onItemClick(AdapterView<?> arg0, final View arg1, final int arg2, lo
 	final TextView nome 	= (TextView)arg1.findViewById(R.id.txt);
 	final TextView telefone = (TextView)arg1.findViewById(R.id.txtTelefone);
 	final TextView endereco = (TextView)arg1.findViewById(R.id.txtEndereco);
-	//final TextView id = (TextView)arg1.findViewById(R.id.keyId);
+	final TextView id = (TextView)arg1.findViewById(R.id.keyId);
 	
 	tCliente.setText(nome.getText().toString());
 	tTelefone.setText(telefone.getText().toString());
 	tEndereco.setText(endereco.getText().toString());
 	cliente.setText(nome.getText().toString());
-	
+	tId.setText(id.getText().toString());
 	LayCliente.setVisibility(View.VISIBLE);
 	
 	

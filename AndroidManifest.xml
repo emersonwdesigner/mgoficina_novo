@@ -43,31 +43,26 @@
         </activity>
         <activity
             android:name="com.mgoficina.MainActivity"
-            android:label="@string/title_activity_nova"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>
         <activity
             android:name="com.mgoficina.FormBuscaActivity"
-            android:label="@string/title_activity_nova"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>
         <activity
             android:name="com.mgoficina.SearchActivity"
-            android:label="@string/title_activity_nova"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>
         <activity
             android:name="com.mgoficina.SingleActivity"
-            android:label="@string/title_activity_nova"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>
         <activity
             android:name="com.mgoficina.SingleActivityEdit"
-            android:label="@string/title_activity_nova"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>

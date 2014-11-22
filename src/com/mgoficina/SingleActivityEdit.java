@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,23 +22,32 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
-public class SingleActivityEdit extends SherlockActivity {
+public class SingleActivityEdit extends SherlockActivity implements OnItemClickListener{
 	ImageView viewImage;
 	ImageView icone, conta;
 	final DataBaseHandler db = new DataBaseHandler(this);
-	
 	TextView title, cliente, descricao, defeito, local, acessorio, obs, valorS, idItem, editTel, editEnd; 
+	Dialog listDialog;
+	String[] from;
+    int[] to;
+    Cursor cursor;
+    ContentValues values = new ContentValues();
 	
 /** Called when the activity is first created. */
 @Override
@@ -264,6 +275,7 @@ public void editaItem(final View v){
 			    	Intent it = new Intent(SingleActivityEdit.this,SingleActivityEdit.class);  
 			    	it.putExtra("ID", TxtID);
 			        startActivity(it);
+			        finish();
 			   	}
 			    }else{
 			    	String TxtID = idItem.getText().toString();
@@ -274,6 +286,7 @@ public void editaItem(final View v){
 			    	Intent it = new Intent(SingleActivityEdit.this,SingleActivityEdit.class);  
 			    	it.putExtra("ID", TxtID);
 			        startActivity(it);
+			        finish();
 			    }
 				}	
 			  })
@@ -319,6 +332,7 @@ public void novaImagem(View v) {
                     Intent it = new Intent(SingleActivityEdit.this,SingleActivityEdit.class);  
         	    	it.putExtra("ID", TxtID);
         	        startActivity(it);
+        	        finish();
                  }
                  else if (items[item].equals(getString(R.string.cancelar))) {
                      dialog.dismiss();
@@ -354,6 +368,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             Intent it = new Intent(SingleActivityEdit.this,SingleActivityEdit.class);  
 	    	it.putExtra("ID", TxtID);
 	        startActivity(it);
+	        finish();
             
         } else if (requestCode == 2) {
         	Log.v("aviso", "Edita erro 3.2");
@@ -377,6 +392,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             Intent it = new Intent(SingleActivityEdit.this,SingleActivityEdit.class);  
 	    	it.putExtra("ID", TxtID);
 	        startActivity(it);
+	        finish();
            
         }
     }
@@ -401,9 +417,96 @@ public void onBackPressed() {
 	String TxtID = idItem.getText().toString();
 	it.putExtra("ID", TxtID);
     startActivity(it);
+    finish();
 }
 @SuppressLint("NewApi")
 public static String removerAcentos(String str) {
     return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+}
+
+public void clientes(View v){
+	from = new String[] {DataBaseHandler.KEY_CLIENTE_NAME, DataBaseHandler.KEY_CLIENTE_TELEFONE, DataBaseHandler.KEY_CLIENTE_ENDERECO, DataBaseHandler.KEY_CLIENTE_ID_OS};
+    
+    // Ids of views in listview_layout
+    to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.keyId};        
+    
+    cursor = db.getAllClientes();
+    if(cursor.getCount() > 0 ){
+     showdialog();
+    }
+	
+}
+
+@SuppressWarnings("deprecation")
+private void showdialog()
+{
+    listDialog = new Dialog(this);
+    listDialog.setTitle(getString(R.string.clientes));
+     LayoutInflater li = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+     View v = li.inflate(R.layout.main, null, false);
+     listDialog.setContentView(v);
+     listDialog.setCancelable(true);
+     //there are a lot of settings, for dialog, check them all out!
+
+     final ListView list1 = (ListView) listDialog.findViewById(R.id.list);
+     list1.setOnItemClickListener(this);
+     registerForContextMenu(list1);
+     list1.setAdapter(new SimpleCursorAdapter(this, R.layout.listview_clientes, cursor, from, to));
+     //now that the dialog is set up, it's time to show it
+     listDialog.show();
+    
+     list1.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+         public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                 int pos, long id) {
+        	 onCreateContextMenu(null, arg1, null);
+        	    final TextView nome 	= (TextView) arg1.findViewById(R.id.txt);
+        	    final TextView ids 		= (TextView) arg1.findViewById(R.id.keyId);
+        		final String idString = ids.getText().toString();
+        		
+        		Log.v("RESPONSE","pos: "+ nome.getText().toString()+ idString);
+        		
+        		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(arg1.getContext());
+        		alertDialogBuilder.setTitle(getString(R.string.quer_excluir_cliente) + nome.getText().toString()+"?").setIcon(R.drawable.ic_action_discard)
+        		.setCancelable(false)
+        		.setPositiveButton("OK",
+        		  new DialogInterface.OnClickListener() {
+
+        			public void onClick(DialogInterface dialog,int id) {
+        				db.deleteCliente(idString);
+        				listDialog.cancel();
+        		    }
+        		  })
+        		.setNegativeButton("Cancelar",
+        		  new DialogInterface.OnClickListener() {
+        		    public void onClick(DialogInterface dialog,int id) {
+        			dialog.cancel();
+        		    }
+        		  });
+
+        	// create alert dialog
+        	AlertDialog alertDialog = alertDialogBuilder.create();
+
+        	// show it
+        	alertDialog.show();
+
+             return true;
+         }
+     }); 
+}
+
+
+public void onItemClick(AdapterView<?> arg0, final View arg1, final int arg2, long arg3)
+{
+	final TextView id = (TextView)arg1.findViewById(R.id.keyId);
+	values.put(DataBaseHandler.KEY_CLIENTE, id.getText().toString());
+
+	db.Update(DataBaseHandler.TABLE_CONTACTS, values, "_id=?", new String[] {idItem.getText().toString()});
+	Intent it = new Intent(SingleActivityEdit.this,SingleActivityEdit.class);  
+	it.putExtra("ID", idItem.getText().toString());
+    startActivity(it);
+    finish(); 
+                   listDialog.cancel();
+             
 }
 }

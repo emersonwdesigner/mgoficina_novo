@@ -239,7 +239,7 @@ public class ExportaService extends Service implements Runnable {
     			
     	        List<NameValuePair> pairsclientes = new ArrayList<NameValuePair>();	
     	        
-    	        pairsclientes.add(new BasicNameValuePair("id", String.valueOf(cnclientes.getID())));
+    	        pairsclientes.add(new BasicNameValuePair("id", cnclientes.getIdv()));
     	        pairsclientes.add(new BasicNameValuePair("nome", cnclientes.getName()));
     	        pairsclientes.add(new BasicNameValuePair("telefone", String.valueOf(cnclientes.getLiga())));
     	        pairsclientes.add(new BasicNameValuePair("endereco", cnclientes.getDescricao()));
@@ -256,7 +256,7 @@ public class ExportaService extends Service implements Runnable {
     	            Log.v("RESPONSE","Resposta cliente "+responseBodyclientes);
     	            if(responseBodyclientes.equals("Y")){
     	            	//String idS = String.valueOf(cnLotes.getID()); 
-    	            	db.mudaExportaCliente(String.valueOf(cnclientes.getID()), 1 );
+    	            	db.mudaExportaCliente(cnclientes.getIdv(), 1 );
     	            	Log.v("RESPONSE","sim cliente");
     	            	qtde++;
     	            }else{

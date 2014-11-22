@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.example.mgoficina.R;
 
 public class FormBuscaActivity extends SherlockActivity {
 	EditText entradaTexto;
+	final DataBaseHandler db = new DataBaseHandler(this);
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,16 +69,20 @@ public class FormBuscaActivity extends SherlockActivity {
 		            	String var1 = param.getText().toString();
 		            	
 		        		
-		            	Intent it = new Intent(FormBuscaActivity.this,SearchActivity.class);
-		        		if(radioGenderButton.getText().equals("Orden de serviço")){
-		        			it.putExtra("COLUNA", "os.name");
-		        		}else if(radioGenderButton.getText().equals("Cliente")){
-		        			it.putExtra("COLUNA", "cliente");
-		        		}else if(radioGenderButton.getText().equals("Descrição")){ 
-		        			it.putExtra("COLUNA", "descricao");
+		            	Intent it = new Intent(FormBuscaActivity.this,ListaTrabalhosActivity.class);
+		        		if(radioGenderButton.getText().equals(getString(R.string.os))){
+		        			it.putExtra("COLUNA", DataBaseHandler.TABLE_CONTACTS+"."+DataBaseHandler.KEY_NAME);
+		        			Log.v("aviso", "OS");
+		        		}else if(radioGenderButton.getText().equals(getString(R.string.cliente))){
+		        			it.putExtra("COLUNA", DataBaseHandler.TABLE_CLIENTES+"."+DataBaseHandler.KEY_CLIENTE_NAME);
+		        			Log.v("aviso",  DataBaseHandler.TABLE_CLIENTES+"."+DataBaseHandler.KEY_CLIENTE_NAME);
+		        		}else if(radioGenderButton.getText().equals(getString(R.string.descricao))){ 
+		        			it.putExtra("COLUNA", DataBaseHandler.TABLE_CONTACTS+"."+DataBaseHandler.KEY_DESCRICAO);
+		        			Log.v("aviso", DataBaseHandler.TABLE_CONTACTS+"."+DataBaseHandler.KEY_DESCRICAO);
 		        		}
 		        		
-		        		
+		        		it.putExtra("STATUS", var1);
+		        		it.putExtra("TIPO", "busca");
 		        		it.putExtra("KEY", var1);
 		                startActivity(it); 	
 					}

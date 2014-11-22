@@ -35,7 +35,7 @@ String[] from;
 int[] to;
 Cursor cursor;
 ListView list;
-TextView idCliente, idClienteAnt, nomeAnt, telefoneAnt, enderecoAnt, telefoneTroca;
+TextView idCliente, idClienteAnt, nomeAnt, telefoneAnt, enderecoAnt, telefoneTroca, idClienteOs;
 EditText editarNome, editarTelefone, editarEndereco;
 final Context context = this;
 Funcoes funcoes = new Funcoes();
@@ -57,10 +57,11 @@ from = new String[] {
 		DataBaseHandler.KEY_CLIENTE_ID,
 		DataBaseHandler.KEY_CLIENTE_NAME,
 		DataBaseHandler.KEY_CLIENTE_TELEFONE, 
-		DataBaseHandler.KEY_CLIENTE_ENDERECO};
+		DataBaseHandler.KEY_CLIENTE_ENDERECO,
+		DataBaseHandler.KEY_CLIENTE_ID_OS};
 
 // Ids of views in listview_layout
-to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.keyId, R.id.editarNome, R.id.editarTelefone, R.id.editarEndereco};        
+to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.keyId, R.id.editarNome, R.id.editarTelefone, R.id.editarEndereco, R.id.keyIdOs};        
 
 cursor = db.getAllClientes();
 
@@ -87,6 +88,7 @@ adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder(){
 	   }    
 	       
 	});		
+
 }
 
 public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,11 +136,12 @@ public boolean onOptionsItemSelected(MenuItem item) {
 			    	}
 					
 					//db.criaCliente(funcoes.removerAcentos(nome), telefone, funcoes.removerAcentos(endereco), 0);
-					
+					values.put(DataBaseHandler.KEY_CLIENTE_ID_OS, funcoes.gerarIdCliente());
 					values.put(DataBaseHandler.KEY_CLIENTE_NAME, funcoes.removerAcentos(nome));
 					values.put(DataBaseHandler.KEY_CLIENTE_TELEFONE, telefone);
 					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, funcoes.removerAcentos(endereco));
 					values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
+					values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 0);
 
 					db.Insert(DataBaseHandler.TABLE_CLIENTES, values);
 					Toast.makeText(getBaseContext(), getString(R.string.cliente_inserido), Toast.LENGTH_LONG).show();
@@ -174,6 +177,7 @@ public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuIn
 public boolean onContextItemSelected(android.view.MenuItem item) {
 	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	idClienteAnt= (TextView) info.targetView.findViewById(R.id.keyId);
+	idClienteOs = (TextView) info.targetView.findViewById(R.id.keyIdOs);
 	nomeAnt 	= (TextView) info.targetView.findViewById(R.id.txt);
 	telefoneAnt = (TextView) info.targetView.findViewById(R.id.txtTelefone);
 	enderecoAnt = (TextView) info.targetView.findViewById(R.id.txtEndereco);
@@ -238,8 +242,14 @@ public boolean onContextItemSelected(android.view.MenuItem item) {
     	
         return true;
     case R.id.delete:
-    	Log.v("aviso", idClienteAnt.getText().toString());
-    	db.deleteCliente(idClienteAnt.getText().toString());
+    	Log.v("aviso", idClienteOs.getText().toString());
+    	//db.deleteCliente(idClienteAnt.getText().toString());
+    	
+    	values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 1);
+		db.Update(DataBaseHandler.TABLE_CLIENTES, values, "_id=?", new String[] {idClienteAnt.getText().toString()});
+		
+		
+    	db.removeClienteOs(idClienteOs.getText().toString());
     	Toast.makeText(getBaseContext(), getString(R.string.cliente_removido), Toast.LENGTH_LONG).show();
         startActivity(new Intent(ClientesActivity.this,ClientesActivity.class));
         return true;

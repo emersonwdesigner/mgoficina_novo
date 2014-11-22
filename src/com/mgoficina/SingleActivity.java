@@ -100,8 +100,6 @@ if(itens.getEntrada()== 0){
 valorS.setText(funcoes.moeda(itens.getValor()));
 liga = itens.getLiga();
 
-Log.v("ligas", "lo"+String.valueOf(liga));
-Log.v("ligas", "ex"+String.valueOf(itens.getExporta()));
 if(liga == 0){
 	getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#007ca5")));
 	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\"><b>"+getString(R.string.title_activity_single) +"</b></font>"));

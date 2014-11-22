@@ -44,7 +44,7 @@ public class LotesFragment extends SherlockListFragment{
 			       if(view.getId() == R.id.keys){
 			    	   //Log.v("aviso",cursor.getString(columnIndex));
 			    	   icon = (TextView) view.findViewById(R.id.keys);
-			    	   String conta = String.valueOf(db.getTrabalhosOpcao(cursor.getString(columnIndex), 2).size());
+			    	   String conta = String.valueOf(db.getTrabalhosOpcao(cursor.getString(columnIndex), 2, null, null).size());
 			    	   String total="";
 			    	   if(conta.equals("1")){
 			    		total = getString(R.string.item);  
