@@ -92,7 +92,7 @@ public void editaItem(final View v){
 		final TextView TituloEdit	= (TextView) promptsView.findViewById(R.id.titPopupEdit);
 		
 		//setar o tem a ser editado
-				if(v.getContentDescription().equals("nome")){
+				if(v.getContentDescription().equals(getString(R.string.nome))){
 		TituloEdit.setText(getString(R.string.editar) +" "+getString(R.string.user_nome));			
 		TextView ItemEditado 	= (TextView) findViewById(R.id.nomePerfil);	
 		String TxtEditado = ItemEditado.getText().toString();
@@ -110,7 +110,7 @@ public void editaItem(final View v){
 				public void onClick(DialogInterface dialog,int id) {
 			    	String TxtEdit = ItemEditavel.getText().toString();
 			    	
-					if(v.getContentDescription().equals("nome")){
+					if(v.getContentDescription().equals(getString(R.string.nome))){
 			    	
 			    	db.mudaDadosUser(0, 0, funcoes.removerAcentos(TxtEdit), "1");
 			    	Toast.makeText(getBaseContext(), getString(R.string.iten_editado)+ TxtEdit, Toast.LENGTH_LONG).show();

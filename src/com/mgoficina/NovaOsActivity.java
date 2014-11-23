@@ -49,7 +49,7 @@ public class NovaOsActivity extends SherlockActivity implements OnItemClickListe
     final DataBaseHandler db = new DataBaseHandler(this);
     Funcoes funcoes = new Funcoes();
     ContentValues values = new ContentValues();
-    EditText numero, cliente, novoCliente, novoTelefone, novoEndereco;
+    EditText numero, cliente, novoCliente, novoTelefone, novoEndereco, novoEmail;
     LinearLayout LayOs, LayCliente, LayNovoCliente;
     String[] from;
     String idCliente;
@@ -57,7 +57,7 @@ public class NovaOsActivity extends SherlockActivity implements OnItemClickListe
     Cursor cursor;
     ListView list;
     Dialog listDialog;
-    TextView tCliente, tTelefone, tEndereco, tId;
+    TextView tCliente, tTelefone, tEndereco,tEmail , tId;
  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,7 @@ public class NovaOsActivity extends SherlockActivity implements OnItemClickListe
         tCliente 	= (TextView) findViewById(R.id.NomeCliente);
         tTelefone 	= (TextView) findViewById(R.id.telefoneCliente);
         tEndereco 	= (TextView) findViewById(R.id.enderecoCliente);
+        tEmail 		= (TextView) findViewById(R.id.emailCliente);
         tId 		= (TextView) findViewById(R.id.IdCliente);
         
         cliente 	= (EditText) findViewById(R.id.editCliente);
@@ -74,6 +75,7 @@ public class NovaOsActivity extends SherlockActivity implements OnItemClickListe
         novoCliente = (EditText) findViewById(R.id.editNovoCliente);
         novoTelefone = (EditText) findViewById(R.id.editNovoTelefone);
         novoEndereco = (EditText) findViewById(R.id.editNovoEndereco);
+        novoEmail = (EditText) findViewById(R.id.editNovoEmail);
         numero 		= (EditText) findViewById(R.id.os);
         LayOs 		= (LinearLayout) findViewById(R.id.LayOs);
         LayCliente 	= (LinearLayout) findViewById(R.id.LayCliente);
@@ -165,14 +167,12 @@ public boolean add_os2(View v){
     	
     	
     	String var2 = foto.getText().toString();
-    	//String var3 = removerAcentos(cliente.getText().toString());
     	String var4 = removerAcentos(defeito.getText().toString());
     	String var5 = removerAcentos(acessorio.getText().toString());
     	String var6 = removerAcentos(novoCliente.getText().toString());
     	String var7 = novoTelefone.getText().toString();
     	String var8 = removerAcentos(novoEndereco.getText().toString());
-    	//String var9 = tTelefone.getText().toString();
-    	//String var10 = tEndereco.getText().toString();
+    	String var9 = removerAcentos(novoEmail.getText().toString());
     	
     	// data
     	Date d = new Date();
@@ -198,6 +198,7 @@ if(tId.getText().toString().equals("")){
 					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, var8);
 					values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
 					values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 0);
+					values.put(DataBaseHandler.KEY_CLIENTE_EMAIL, var9);
 
 	db.Insert(DataBaseHandler.TABLE_CLIENTES, values);
 	
@@ -229,6 +230,7 @@ if(tId.getText().toString().equals("")){
 					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, var8);
 					values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
 					values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 0);
+					values.put(DataBaseHandler.KEY_CLIENTE_EMAIL, var9);
 
 	db.Insert(DataBaseHandler.TABLE_CLIENTES, values);
 	
@@ -339,10 +341,10 @@ public void novoCliente(View v){
 	LayCliente.setVisibility(View.GONE);
 }
 public void clientes(View v){
-	from = new String[] {DataBaseHandler.KEY_CLIENTE_NAME, DataBaseHandler.KEY_CLIENTE_TELEFONE, DataBaseHandler.KEY_CLIENTE_ENDERECO, DataBaseHandler.KEY_CLIENTE_ID_OS};
+	from = new String[] {DataBaseHandler.KEY_CLIENTE_NAME, DataBaseHandler.KEY_CLIENTE_TELEFONE, DataBaseHandler.KEY_CLIENTE_ENDERECO, DataBaseHandler.KEY_CLIENTE_EMAIL, DataBaseHandler.KEY_CLIENTE_ID_OS};
     
     // Ids of views in listview_layout
-    to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.keyId};        
+    to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.txtEmail, R.id.keyId};        
     
     cursor = db.getAllClientes();
     if(cursor.getCount() > 0 ){
@@ -387,7 +389,9 @@ private void showdialog()
         		  new DialogInterface.OnClickListener() {
 
         			public void onClick(DialogInterface dialog,int id) {
-        				db.deleteCliente(idString);
+        				values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 1);
+        				db.Update(DataBaseHandler.TABLE_CLIENTES, values, DataBaseHandler.KEY_CLIENTE_ID_OS +"=?", new String[] {idString});
+        				//db.deleteCliente(idString);
         				listDialog.cancel();
         		    }
         		  })
@@ -416,17 +420,17 @@ public void onItemClick(AdapterView<?> arg0, final View arg1, final int arg2, lo
 	final TextView nome 	= (TextView)arg1.findViewById(R.id.txt);
 	final TextView telefone = (TextView)arg1.findViewById(R.id.txtTelefone);
 	final TextView endereco = (TextView)arg1.findViewById(R.id.txtEndereco);
-	final TextView id = (TextView)arg1.findViewById(R.id.keyId);
+	final TextView email 	= (TextView)arg1.findViewById(R.id.txtEmail);
+	final TextView id 		= (TextView)arg1.findViewById(R.id.keyId);
 	
 	tCliente.setText(nome.getText().toString());
 	tTelefone.setText(telefone.getText().toString());
 	tEndereco.setText(endereco.getText().toString());
 	cliente.setText(nome.getText().toString());
+	tEmail.setText(email.getText().toString());
 	tId.setText(id.getText().toString());
 	LayCliente.setVisibility(View.VISIBLE);
 	
-	
-    
                    listDialog.cancel();
              
 }

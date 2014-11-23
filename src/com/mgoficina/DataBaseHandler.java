@@ -24,7 +24,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "ordens_servico";
 
 	// Tabelas
-	private static final String TABLE_USER = "user";
+	static final String TABLE_USER = "user";
 	static final String TABLE_CONTACTS = "os";
 	private static final String TABLE_STATUS = "trabalhos";
 	private static final String TABLE_LOTES = "lotes";
@@ -87,6 +87,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	static final String KEY_CLIENTE_ENDERECO = "cliente_endereco";
 	static final String KEY_CLIENTE_EXPORTA = "cliente_exporta";
 	static final String KEY_CLIENTE_DELETADO = "cliente_deletado";
+	static final String KEY_CLIENTE_EMAIL = "cliente_email";
 		
 	public DataBaseHandler(Context context) {
 	super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -160,7 +161,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 						+ KEY_CLIENTE_TELEFONE + " INTEGER,"
 						+ KEY_CLIENTE_ENDERECO + " TEXT,"
 						+ KEY_CLIENTE_EXPORTA + " INTEGER," 
-						+ KEY_CLIENTE_DELETADO + " INTEGER)";
+						+ KEY_CLIENTE_DELETADO + " INTEGER, "
+						+ KEY_CLIENTE_EMAIL + " TEXT)";
 				db.execSQL(CREATE_CLIENTE_TABLE);		
 			//INSERIR  OU IGNORE INTO bookmarks ( users_id , lessoninfo_id )  VALUES ( 123 ,  456 )
 			db.execSQL("INSERT INTO "+TABLE_STATUS+"("+KEY_STATUS_KEY+", "+KEY_STATUS_NAME+", "+KEY_STATUS_INFO+", "+KEY_STATUS_ICON+") VALUES(1, 'Para orçamento', 'Equipamento para orçamento','"+R.drawable.ic_action_paste +"')");
@@ -284,6 +286,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 				contact.setName(cursor.getString(2));
 				contact.setLiga(cursor.getInt(3));
 				contact.setDescricao(cursor.getString(4));
+				contact.setEmailcliente(cursor.getString(7));
 				// Adding contact to list
 				contactList.add(contact);
 				} while (cursor.moveToNext());
@@ -893,6 +896,7 @@ return contactList;
 						contact.setEntrada(cursor.getInt(15));
 						contact.setTelefonecliente(cursor.getInt(27));
 						contact.setEnderecocliente(cursor.getString(28));
+						contact.setEmailcliente(cursor.getString(31));
 						
 						
 					}
@@ -928,6 +932,7 @@ return contactList;
 					contact.setIdv(cursor.getString(0));
 					contact.setTelefonecliente(cursor.getInt(27));
 					contact.setEnderecocliente(cursor.getString(28));
+					contact.setEmailcliente(cursor.getString(31));
 					
 				}
 				// close inserting data from database
@@ -1328,6 +1333,31 @@ public int contaHome(int tipo) {
 
 			}
 			
+			public String getUmaString(String tabela, String where, String key, String index) {
+				
+				//Log.v("aviso", "title trabalhos");
+				String selectQuery = 
+				        "SELECT * FROM "+tabela+" WHERE "+where+"='"+key+"' LIMIT 1";
+
+				    SQLiteDatabase db = this.getWritableDatabase();
+				    Cursor cursor = db.rawQuery(selectQuery, null);
+
+				    StringBuilder sb = new StringBuilder();
+
+				    cursor.moveToFirst();
+
+				    /*********** Fazer isto por cada coluna ***************/
+				    String nome_da_coluna_string = cursor.getString(cursor.getColumnIndex(index));
+
+				    sb.append(nome_da_coluna_string);
+				    /******************************************************/
+
+				    cursor.close();
+
+				    return sb.toString();
+
+			}
+			
 			public String getCodigo() {
 				
 				String selectQuery =   "SELECT * FROM "+TABLE_USER+" LIMIT 1";
@@ -1425,7 +1455,20 @@ public int contaHome(int tipo) {
 				//int resu = (int)((85 / 153) * 100);
 				return resu;
 			}
-			
+		
+			// tira cliente da OS
+			public int removeClienteOs(String cliente) {
+			SQLiteDatabase db = this.getWritableDatabase();
+
+			ContentValues values = new ContentValues();
+			values.putNull(KEY_CLIENTE);
+
+			// updating row
+			return db.update(TABLE_CONTACTS, values, KEY_CLIENTE + " = ?",
+			new String[] { cliente });
+
+			}
+
 			/**
 			* CRUD - em teste (http://www.devmedia.com.br/realizando-operacoes-de-crud-no-android-com-java/25855)
 			*/
@@ -1467,19 +1510,16 @@ public int contaHome(int tipo) {
 		return linhasExcluidas;
 	}
 		
-		// tira cliente da OS
-		public int removeClienteOs(String cliente) {
+	public Cursor Select(String tabela, String campos[], String where,
+			String[] whereArgs, String groupBy, String having, String orderBy) {
+		Cursor c = null;
 		SQLiteDatabase db = this.getWritableDatabase();
-
-		ContentValues values = new ContentValues();
-		values.putNull(KEY_CLIENTE);
-
-		// updating row
-		return db.update(TABLE_CONTACTS, values, KEY_CLIENTE + " = ?",
-		new String[] { cliente });
-
+		try {
+			c = db.query(tabela, campos, where, whereArgs, groupBy, having,	orderBy);
+		} finally {
+			db.close();
 		}
+		return c;
+	}
 
-		
-	
 	}

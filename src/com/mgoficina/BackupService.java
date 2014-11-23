@@ -25,14 +25,15 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class BackupService extends Service implements Runnable {
-
 	
 	DataBaseHandler db = new DataBaseHandler(this);
+	ContentValues values = new ContentValues();
 	@Override
 	public void onCreate() {
 		
@@ -77,9 +78,6 @@ public class BackupService extends Service implements Runnable {
 		
         List<NameValuePair> pairs = new ArrayList<NameValuePair>();	
         pairs.add(new BasicNameValuePair("codigo", codigo));
-        Log.v("RESPONSE","Resposta");
-        
-        
 	    // Retorna o resultado
 		
         
@@ -134,12 +132,10 @@ public class BackupService extends Service implements Runnable {
 	        postLotes.setEntity(ent);
 	        HttpResponse responsePOSTLotes = client.execute(postLotes);  
 	        String responseBodyLotes = EntityUtils.toString(responsePOSTLotes.getEntity());
-	        
 			JSONObject jsonLotes = new JSONObject(responseBodyLotes);
-
 		     // Recupera a lista product do JSON
 		    JSONArray productsLotes = jsonLotes.getJSONArray("product");
-
+		    
 		    int lengthLotes = productsLotes.length();
 		    Log.v("RESPONSE","conta lotes"+String.valueOf(lengthLotes));
 		     i =0;
@@ -153,6 +149,7 @@ public class BackupService extends Service implements Runnable {
 			Log.v("RESPONSE","lote Inserido");
 		    }
 		    
+		    Log.v("ERRO","2");
 		 // RESULTADOS DOS CLIENTES
 	        postClientes.setEntity(ent);
 	        HttpResponse responsePOSTClientes = client.execute(postClientes);  
@@ -169,12 +166,23 @@ public class BackupService extends Service implements Runnable {
 		    for( i = 0; i < lengthClientes; ++i) {
 		        JSONObject productClientes = productsClientes.getJSONObject(i);
 		        
-		        String nomeCliente		= productClientes.getString("nome");
-		        int telefoneCliente 	= productClientes.getInt("telefone");
-		        String enderecoCliente 	= productClientes.getString("endereco");
-		        Log.v("RESPONSE","cliente:"+nomeCliente+telefoneCliente+enderecoCliente);
+		      //  String nomeCliente		= productClientes.getString("nome");
+		       // int telefoneCliente 	= productClientes.getInt("telefone");
+		       // String enderecoCliente 	= productClientes.getString("endereco");
+		        values.put(DataBaseHandler.KEY_CLIENTE_ID_OS, productClientes.getString("id"));
+				values.put(DataBaseHandler.KEY_CLIENTE_NAME, productClientes.getString("nome"));
+				values.put(DataBaseHandler.KEY_CLIENTE_TELEFONE, productClientes.getInt("telefone"));
+				values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, productClientes.getString("endereco"));
+				values.put(DataBaseHandler.KEY_CLIENTE_EMAIL, productClientes.getString("email"));
+				values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
+				values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 0);
+
+				db.Insert(DataBaseHandler.TABLE_CLIENTES, values);
 		        
-		        db.criaCliente(nomeCliente, telefoneCliente, enderecoCliente, 1);
+		        
+		       // Log.v("RESPONSE","cliente:"+nomeCliente+telefoneCliente+enderecoCliente);
+		        
+		        //db.criaCliente(nomeCliente, telefoneCliente, enderecoCliente, 1);
 			Log.v("RESPONSE","cliente Inserido");
 		    }
 		    

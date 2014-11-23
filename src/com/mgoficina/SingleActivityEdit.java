@@ -42,7 +42,7 @@ public class SingleActivityEdit extends SherlockActivity implements OnItemClickL
 	ImageView viewImage;
 	ImageView icone, conta;
 	final DataBaseHandler db = new DataBaseHandler(this);
-	TextView title, cliente, descricao, defeito, local, acessorio, obs, valorS, idItem, editTel, editEnd; 
+	TextView title, cliente, descricao, defeito, local, acessorio, obs, valorS, idItem, editTel, editEnd, editEmail; 
 	Dialog listDialog;
 	String[] from;
     int[] to;
@@ -80,6 +80,7 @@ valorS		= (TextView) findViewById(R.id.textValor);
 idItem 		= (TextView) findViewById(R.id.textID);
 editTel 	= (TextView) findViewById(R.id.editaTelef);
 editEnd 	= (TextView) findViewById(R.id.editaEnder);
+editEmail 	= (TextView) findViewById(R.id.editaEmail);
 
 if(db.getDefInt("contagem").equals("y")){
 	
@@ -117,7 +118,8 @@ if(!String.valueOf(itens.getTelefonecliente()).equals("0")){
 		editTel.setText(getString(R.string.telefone)+": "+inTel+"-"+fimTel);
 }
 
-editEnd.setText(itens.getEnderecocliente());
+editEnd.setText(getString(R.string.endereco) +": "+itens.getEnderecocliente());
+editEmail.setText(getString(R.string.email) +": "+itens.getEmailcliente());
 
 String b; 
 b = String.valueOf(itens.getValor());
@@ -425,10 +427,10 @@ public static String removerAcentos(String str) {
 }
 
 public void clientes(View v){
-	from = new String[] {DataBaseHandler.KEY_CLIENTE_NAME, DataBaseHandler.KEY_CLIENTE_TELEFONE, DataBaseHandler.KEY_CLIENTE_ENDERECO, DataBaseHandler.KEY_CLIENTE_ID_OS};
+	from = new String[] {DataBaseHandler.KEY_CLIENTE_NAME, DataBaseHandler.KEY_CLIENTE_TELEFONE, DataBaseHandler.KEY_CLIENTE_ENDERECO, DataBaseHandler.KEY_CLIENTE_EMAIL, DataBaseHandler.KEY_CLIENTE_ID_OS};
     
     // Ids of views in listview_layout
-    to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.keyId};        
+    to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco,  R.id.txtEmail, R.id.keyId};        
     
     cursor = db.getAllClientes();
     if(cursor.getCount() > 0 ){

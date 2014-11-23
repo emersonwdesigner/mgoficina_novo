@@ -10,6 +10,12 @@
     <string name="descricao_app">"Total controle das suas ordens de serviço na palma da mão."</string>
     <string name="seus_dados_estarao">Seus dados estarão guardados protegidos em um servidor remoto.</string>
     <string name="esse_e_o_codigo">Esse é o código identificador no sistema, ele é único para cada usuário.</string>
+    <string name="deseja_notificar">Deseja notificar o cliente sobre a mudança de situação?</string>
+    <string name="mudanca_situacao">Mudança de situação</string>
+    <string name="texto_notifica_cliente_1">Prezado cliente</string>
+    <string name="texto_notifica_cliente_2">Informo que a Orden de serviço</string>
+    <string name="texto_notifica_cliente_3">passou para de</string>
+    <string name="texto_notifica_cliente_4">Desde já agradeço!</string>
     <string name="enviar_link">Enviar seu link</string>
     <string name="ver_servidor">Ver servidor</string>
     <string name="link_servidor">Link para visualização das Ordens de serviço</string>

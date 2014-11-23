@@ -1,6 +1,8 @@
 package com.mgoficina;
 
 import java.io.ByteArrayInputStream;
+import java.util.UUID;
+
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -32,8 +34,8 @@ public class SingleActivity extends SherlockActivity {
 	int liga;
 	final DataBaseHandler db = new DataBaseHandler(this);
 	final Funcoes funcoes = new Funcoes();
-	
-	TextView datahora, status, title, cliente, descricao, defeito, local, acessorio, obs, valorS, idItem, telCliente, endCliente; 
+	String EmailDoCliente;
+	TextView datahora, status, title, cliente, descricao, defeito, local, acessorio, obs, valorS, idItem, telCliente, endCliente, emailCliente; 
 	
 /** Called when the activity is first created. */
 @SuppressLint("NewApi")
@@ -60,6 +62,7 @@ valorS		= (TextView) findViewById(R.id.textValor);
 idItem 		= (TextView) findViewById(R.id.textID);
 telCliente 	= (TextView) findViewById(R.id.telefCliente);
 endCliente	= (TextView) findViewById(R.id.endCliente);
+emailCliente	= (TextView) findViewById(R.id.emailCliente);
 Log.v("aviso", "single 1");
 
 Contact itens = db.single(key);
@@ -83,6 +86,7 @@ acessorio.setText(itens.getAcessorio());
 obs.setText(itens.getObs());
 idItem.setText(itens.getIdv());
 
+EmailDoCliente = itens.getEmailcliente();
 String inTel 	="";
 String fimTel 	= "";
 if(!String.valueOf(itens.getTelefonecliente()).equals("0")){
@@ -91,7 +95,8 @@ if(!String.valueOf(itens.getTelefonecliente()).equals("0")){
 		telCliente.setText(getString(R.string.telefone)+": "+inTel+"-"+fimTel);
 }
 
-endCliente.setText(itens.getEnderecocliente());
+endCliente.setText(getString(R.string.endereco) +": "+itens.getEnderecocliente());
+emailCliente.setText(getString(R.string.email) +": "+itens.getEmailcliente());
 
 if(itens.getEntrada()== 0){
 	db.mudaEntrada(key);
@@ -215,6 +220,8 @@ final Context context = this;
 private double valor;
 
 public void menuAcao(View v) {
+	
+	
 	final TextView btn = (TextView) findViewById(R.id.textID);  
 	final String var = btn.getText().toString();
 	
@@ -258,6 +265,7 @@ public void menuAcao(View v) {
                  {
 
                 	 menuSituacaoValor(var, "4");
+                	 
   
                  }else if (items[item].equals(getString(R.string.Title_devolvido)))
                  {
@@ -265,10 +273,23 @@ public void menuAcao(View v) {
                 	 menuSituacao(var, "5");
                  }
             	
+            	
+            	 
             }
     }).show();
 }
 
+public void notificarCliente(String key, String emailCliente){
+    Intent email = new Intent(Intent.ACTION_SEND);
+    email.putExtra(Intent.EXTRA_EMAIL,new String[]{emailCliente} );
+    email.putExtra(Intent.EXTRA_SUBJECT,  getString(R.string.mudanca_situacao) +" ("+getString(R.string.os)+": "+ title.getText().toString()+")");
+    email.putExtra(Intent.EXTRA_TEXT, getString(R.string.texto_notifica_cliente_1)+" "+cliente.getText().toString()+". "
+    		+getString(R.string.texto_notifica_cliente_2)+": "+title.getText().toString()+" "+getString(R.string.texto_notifica_cliente_3)+" '"+ db.getTitleTrabalhos(key)+"'. "
+    		+getString(R.string.texto_notifica_cliente_4));
+    		
+    email.setType("message/rfc822");
+    startActivity(Intent.createChooser(email, getString(R.string.deseja_notificar)));
+}
 public void menuSituacao(final String var, final String var2){
 	
 	
@@ -314,11 +335,14 @@ public void menuSituacao(final String var, final String var2){
 			    		Toast.makeText(getBaseContext(), getString(R.string.envia_executando), Toast.LENGTH_LONG).show();
 			    	}
 			    	
+			    		
 			    	
-			    	
-			    	Intent it = new Intent(SingleActivity.this,MainActivity.class);  
-			        startActivity(it);
-			    }
+			    Intent it = new Intent(SingleActivity.this,MainActivity.class);  
+			       startActivity(it);
+			       if(!EmailDoCliente.equals("")){
+			       notificarCliente(var2, EmailDoCliente);
+			       }
+			    };
 			  })
 			.setNegativeButton("Cancelar",
 			  new DialogInterface.OnClickListener() {
@@ -397,13 +421,17 @@ public void menuSituacaoValor(final String var, final String var2){
 					    	Toast.makeText(getBaseContext(), getString(R.string.envia_aguarda), Toast.LENGTH_LONG).show();
 					    }
 			    		
+			    		
 			    		Intent it = new Intent(SingleActivity.this,MainActivity.class);  
 				        startActivity(it);
+				        
+				        if(!EmailDoCliente.equals("")){
+						       notificarCliente(var2, EmailDoCliente);
+						       }
 			    		
 					}else{
 						Log.v("aviso", var2);
 			    		if(var2.equals("2") || var2.equals("3") || var2.equals("4")){
-			    	//Toast.makeText(getBaseContext(), getString(R.string.valor_deve), Toast.LENGTH_LONG).show();
 			    	
 			    	funcoes.avisaSemConexao(SingleActivity.this, getString(R.string.aviso), getString(R.string.valor_deve));
 							

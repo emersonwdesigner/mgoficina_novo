@@ -23,6 +23,7 @@ public class Contact {
 	int _deletado;
 	int _telefonecliente;
 	String _enderecocliente;
+	String _emailcliente;
 
 	// Empty constructor
 	public Contact() {
@@ -143,6 +144,9 @@ public class Contact {
 	public String getEnderecocliente() {
 		return this._enderecocliente;
 		}
+	public String getEmailcliente() {
+		return this._emailcliente;
+		}
 	public String getIdv() {
 		return this._idv;
 		}
@@ -237,7 +241,10 @@ public class Contact {
 		this._enderecocliente =enderecocliente;
 		
 	}
-	
+	public void setEmailcliente(String emailcliente) {
+		this._emailcliente =emailcliente;
+		
+	}
 	
 	}
 	

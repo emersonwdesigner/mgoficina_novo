@@ -243,6 +243,7 @@ public class ExportaService extends Service implements Runnable {
     	        pairsclientes.add(new BasicNameValuePair("nome", cnclientes.getName()));
     	        pairsclientes.add(new BasicNameValuePair("telefone", String.valueOf(cnclientes.getLiga())));
     	        pairsclientes.add(new BasicNameValuePair("endereco", cnclientes.getDescricao()));
+    	        pairsclientes.add(new BasicNameValuePair("email", cnclientes.getEmailcliente()));
     	        pairsclientes.add(new BasicNameValuePair("codigo", codigo)); 
     	        
     	      //  Log.v("RESPONSE","quem " + removerAcentos(cnclientes.getDescricao()) );

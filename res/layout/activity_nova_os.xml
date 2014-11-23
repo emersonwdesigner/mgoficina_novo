@@ -134,7 +134,6 @@
             android:id="@+id/telefoneCliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/azul_escuro" 
             android:maxLength="8"/>
@@ -143,7 +142,11 @@
             android:id="@+id/enderecoCliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/emailCliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         
@@ -200,6 +203,21 @@
             android:id="@+id/editNovoEndereco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10" />
+        
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/editNovoEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             android:ems="10" />
 
     </LinearLayout>

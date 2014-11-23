@@ -35,8 +35,8 @@ String[] from;
 int[] to;
 Cursor cursor;
 ListView list;
-TextView idCliente, idClienteAnt, nomeAnt, telefoneAnt, enderecoAnt, telefoneTroca, idClienteOs;
-EditText editarNome, editarTelefone, editarEndereco;
+TextView idCliente, idClienteAnt, nomeAnt, telefoneAnt, enderecoAnt, emailAnt, telefoneTroca, idClienteOs;
+EditText editarNome, editarTelefone, editarEndereco, editarEmail;
 final Context context = this;
 Funcoes funcoes = new Funcoes();
 @Override
@@ -54,6 +54,7 @@ from = new String[] {
 		DataBaseHandler.KEY_CLIENTE_NAME, 
 		DataBaseHandler.KEY_CLIENTE_TELEFONE, 
 		DataBaseHandler.KEY_CLIENTE_ENDERECO, 
+		DataBaseHandler.KEY_CLIENTE_EMAIL, 
 		DataBaseHandler.KEY_CLIENTE_ID,
 		DataBaseHandler.KEY_CLIENTE_NAME,
 		DataBaseHandler.KEY_CLIENTE_TELEFONE, 
@@ -61,7 +62,7 @@ from = new String[] {
 		DataBaseHandler.KEY_CLIENTE_ID_OS};
 
 // Ids of views in listview_layout
-to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.keyId, R.id.editarNome, R.id.editarTelefone, R.id.editarEndereco, R.id.keyIdOs};        
+to = new int[] { R.id.txt,R.id.txtTelefone, R.id.txtEndereco, R.id.txtEmail, R.id.keyId, R.id.editarNome, R.id.editarTelefone, R.id.editarEndereco, R.id.keyIdOs};        
 
 cursor = db.getAllClientes();
 
@@ -113,6 +114,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 		editarNome 		= (EditText) promptsView.findViewById(R.id.editarNome);
 		editarTelefone 	= (EditText) promptsView.findViewById(R.id.editarTelefone);
 		editarEndereco 	= (EditText) promptsView.findViewById(R.id.editarEndereco);
+		editarEmail 	= (EditText) promptsView.findViewById(R.id.editarEmail);
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
@@ -127,6 +129,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 					
 					String nome 	= editarNome.getText().toString();
 					String endereco = editarEndereco.getText().toString();
+					String email 	= editarEmail.getText().toString();
 					int telefone = 0;
 					if(!editarTelefone.getText().toString().equals("")){
 			        	try {
@@ -140,6 +143,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 					values.put(DataBaseHandler.KEY_CLIENTE_NAME, funcoes.removerAcentos(nome));
 					values.put(DataBaseHandler.KEY_CLIENTE_TELEFONE, telefone);
 					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, funcoes.removerAcentos(endereco));
+					values.put(DataBaseHandler.KEY_CLIENTE_EMAIL, funcoes.removerAcentos(email));
 					values.put(DataBaseHandler.KEY_CLIENTE_EXPORTA, 0);
 					values.put(DataBaseHandler.KEY_CLIENTE_DELETADO, 0);
 
@@ -181,6 +185,7 @@ public boolean onContextItemSelected(android.view.MenuItem item) {
 	nomeAnt 	= (TextView) info.targetView.findViewById(R.id.txt);
 	telefoneAnt = (TextView) info.targetView.findViewById(R.id.txtTelefone);
 	enderecoAnt = (TextView) info.targetView.findViewById(R.id.txtEndereco);
+	emailAnt 	= (TextView) info.targetView.findViewById(R.id.txtEmail);
 	
 	
 	Log.v("aviso", "1");
@@ -194,6 +199,7 @@ public boolean onContextItemSelected(android.view.MenuItem item) {
 		editarNome 		= (EditText) promptsView.findViewById(R.id.editarNome);
 		editarTelefone 	= (EditText) promptsView.findViewById(R.id.editarTelefone);
 		editarEndereco 	= (EditText) promptsView.findViewById(R.id.editarEndereco);
+		editarEmail 	= (EditText) promptsView.findViewById(R.id.editarEmail);
 		
 		String telFormatado = telefoneAnt.getText().toString().replace(" ", "").replace(":", "").replace("-", "").substring(8);
 
@@ -201,6 +207,7 @@ public boolean onContextItemSelected(android.view.MenuItem item) {
 		editarNome.setText(nomeAnt.getText().toString());
 		editarTelefone.setText(telFormatado);
 		editarEndereco.setText(enderecoAnt.getText().toString());
+		editarEmail.setText(emailAnt.getText().toString());
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
 		alertDialogBuilder.setView(promptsView);
@@ -216,12 +223,14 @@ public boolean onContextItemSelected(android.view.MenuItem item) {
 					String nome 	= editarNome.getText().toString();
 					String telefone = editarTelefone.getText().toString();
 					String endereco = editarEndereco.getText().toString();
+					String email 	= editarEmail.getText().toString();
 					
 					//db.editarCliente(idno, funcoes.removerAcentos(nome), telefone, funcoes.removerAcentos(endereco));
 					
 					values.put(DataBaseHandler.KEY_CLIENTE_NAME, funcoes.removerAcentos(nome));
 					values.put(DataBaseHandler.KEY_CLIENTE_TELEFONE, telefone);
 					values.put(DataBaseHandler.KEY_CLIENTE_ENDERECO, funcoes.removerAcentos(endereco));
+					values.put(DataBaseHandler.KEY_CLIENTE_EMAIL, funcoes.removerAcentos(email));
 					
 
 					db.Update(DataBaseHandler.TABLE_CLIENTES, values, "_id=?", new String[] {idno});
