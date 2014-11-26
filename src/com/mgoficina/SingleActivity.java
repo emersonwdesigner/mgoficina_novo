@@ -110,9 +110,9 @@ if(liga == 0){
 	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\"><b>"+getString(R.string.title_activity_single) +"</b></font>"));
 }else{
 	getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.LTGRAY));
-	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#666666\"><b>"+getString(R.string.title_activity_single) + "</b></font>"));	
+	getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#666666\"><b>"+getString(R.string.em_lote)+"</b></font>"));	
 	status.setText(getString(R.string.situacao)+": "+getString(R.string.em_lote));
-	getSupportActionBar().setSubtitle(Html.fromHtml("<font color=\"#da0000\"><b>"+getString(R.string.em_lote)+"</b></font>"));
+	getSupportActionBar().setSubtitle(Html.fromHtml("<font color=\"#da0000\"><b>"+getString(R.string.nao_pode_ser_editada)+"  </b></font>"));
 }
 }
 

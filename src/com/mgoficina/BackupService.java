@@ -114,17 +114,11 @@ public class BackupService extends Service implements Runnable {
 		        int lote 			= product.getInt("lote");
 		        int TelCliente		= product.getInt("telefone_cliente");
 		        String EndCliente	= product.getString("endereco_cliente");
-				
-		        
-		        Bitmap image = BitmapFactory.decodeResource(getResources(),
-						R.drawable.no_image);
-				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-				byte imageInByte[] = stream.toByteArray();  
+		       
 				int liga = 0;
 				if(lote != 0){  liga = 1;}
 				
-			db.addContact(new Contact(os, descricao,imageInByte, cliente, datahora, status, local, liga, defeito, acessorio, obs, valor, lote, 1, 1, 0, TelCliente,EndCliente));
+			db.addContact(new Contact(os, descricao,null, cliente, datahora, status, local, liga, defeito, acessorio, obs, valor, lote, 1, 1, 0, TelCliente,EndCliente));
 			Log.v("RESPONSE","ITEN Inserido");
 		    }
 		    

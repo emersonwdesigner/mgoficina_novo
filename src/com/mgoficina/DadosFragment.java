@@ -23,12 +23,12 @@ public class DadosFragment extends SherlockListFragment{
     
 
     // Array of strings storing country names
-String[] countries = new String[] {
-        "Novos",
-        "Sincronização das OS",
-        "Sincronização dos lotes",
-        "Sincronização do perfil",
-        "Sincronização dos clientes"
+int[] countries = new int[] {
+        R.string.novos,
+        R.string.sincronizacao_das_os,
+        R.string.sincronizacao_dos_lotes,
+        R.string.sincronizacao_do_perfil,
+        R.string.sincronizacao_dos_clientes
        
 };    
 
@@ -43,12 +43,12 @@ int[] flags = new int[]{
 };
 
 // Array of strings to store currencies
-String[] currency = new String[]{
-        "Últimos inseridos",
-        "Ordens não sincronizados com o servidor",
-        "Lotes não sincronizados com o servidor",
-        "Dados do perfil no servidor",
-        "Clientes no servidor"
+int[] currency = new int[]{
+		R.string.ultimos_inseridos,
+		R.string.ordens_nao_sincronizados,
+		R.string.lotes_nao_sincronizados,
+		R.string.dados_do_perfil,
+		R.string.clientes_no_servidor
 };
 TextView keys;
 
@@ -62,8 +62,8 @@ TextView keys;
     
     for(int i=0;i<countries.length;i++){
             HashMap<String, String> hm = new HashMap<String,String>();
-        hm.put("txt", countries[i]);
-        hm.put("cur", currency[i]);
+        hm.put("txt", getString(countries[i]));
+        hm.put("cur", getString(currency[i]));
         hm.put("flag", Integer.toString(flags[i]) );            
         aList.add(hm);        
     }

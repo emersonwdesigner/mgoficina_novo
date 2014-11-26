@@ -58,6 +58,7 @@ holder = (ImageHolder)row.getTag();
 Contact picture = data.get(position);
 holder.numOrdem.setText("Ordem de serviço: "+picture ._name+" ");
 holder.Descricao.setText(funcoes.limitaLetras(picture ._descricao, 25));
+
 if(picture._cliente == null){
 
 holder.ListaCliente.setText("Cliente: "+ context.getResources().getString(R.string.excluido));
@@ -74,12 +75,17 @@ if(picture._image == null){
 	        Bitmap theImage = BitmapFactory.decodeStream(imageStream);
 	        holder.thumb.setImageBitmap(theImage);
 	}
-
-if(picture._entrada == 0){
+if(picture._lote != 0){
+	row.setBackgroundColor(row.getResources().getColor(R.color.vermelho_agua));
+	//row.setBackgroundColor(Color.parseColor("#CFFDD4"));
+	holder.novo.setVisibility(View.VISIBLE);
+	holder.novo.setText(" "+context.getResources().getString(R.string.em_lote)+"");
+	holder.novo.setBackgroundColor(row.getResources().getColor(R.color.opaque_red));
+}else if(picture._entrada == 0){
 	row.setBackgroundColor(row.getResources().getColor(R.color.verde_agua));
 	//row.setBackgroundColor(Color.parseColor("#CFFDD4"));
 	holder.novo.setVisibility(View.VISIBLE);
-}
+} 
 /**
 if (position % 2 == 0) {
 	row.setBackgroundColor(Color.WHITE);
@@ -92,7 +98,7 @@ return row;
 static class ImageHolder
 {
 ImageView thumb;
-TextView listaId, numOrdem, txtTitle, Descricao, ListaCliente, novo;
+TextView listaId, numOrdem, txtTitle, Descricao, ListaCliente, novo, lote;
 }
 
 

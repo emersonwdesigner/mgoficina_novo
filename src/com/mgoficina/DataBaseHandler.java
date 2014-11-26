@@ -550,8 +550,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		}else if(tipo == 5){
 			//Log.v("aviso", "Lista trabalhos false");
 			selectQuery = "SELECT * FROM "+TABLE_CONTACTS+ 
-					" LEFT JOIN "+TABLE_CLIENTES+" ON "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" = "+TABLE_CONTACTS+"."+KEY_CLIENTE+
-					" WHERE "+tabela+" LIKE '%"+key+"%' AND "+KEY_EXPORTA+"='0' AND "+KEY_DELETADO+"='0' ORDER BY "+KEY_NAME+" DESC";
+					" LEFT JOIN "+TABLE_CLIENTES+" ON  "+TABLE_CONTACTS+"."+KEY_CLIENTE+
+					" = "+TABLE_CLIENTES+"."+KEY_CLIENTE_ID_OS+" WHERE "+tabela+" LIKE '%"+key+"%' AND ("+TABLE_CONTACTS+"."+KEY_EXPORTA+"='0' OR "+TABLE_CONTACTS+"."+KEY_EXPORTA+"='1') AND "+TABLE_CONTACTS+"."+KEY_DELETADO+"='0' ORDER BY "+TABLE_CONTACTS+"."+KEY_NAME+" DESC";
 		}
 
 		Log.v("aviso", selectQuery);
@@ -567,6 +567,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		contact.setEntrada(cursor.getInt(15));
 		contact.setImage(cursor.getBlob(3));
 		contact.setCliente(cursor.getString(21));
+		contact.setLote(cursor.getInt(13));
 		// Adding contact to list
 		contactList.add(contact);
 		} while (cursor.moveToNext());

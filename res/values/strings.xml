@@ -110,6 +110,7 @@
     <string name="envia_entregue">Equipamento enviado para a "Entregues" com sucesso!</string>
     <string name="envia_executando">Equipamento enviado para "Executando" com sucesso!</string>
     <string name="aviso_fecha_lote">Ao fechar lote você irá colocar as Ordens de serviço na situação de arquivo. Elas estarão disponíveis somente para leitura e não pederão ser editadas ou excluídas. </string>
+    <string name="nao_pode_ser_editada">(Não pode ser editada ou excluída)</string>
     <string name="foto_trocada">Foto substituida com sucesso!</string>
     <string name="ja_cadastrado">já foi cadastrado! Escolha outro.</string>
     <string name="valor_deve">Valor deve ser informado!</string>
@@ -214,5 +215,18 @@
         <string name="toque_segure">Toque e segure para as ações</string>
         <string name="cliente_inserido">Cliente inserido com sucesso!</string>
         <string name="cliente_removido">Cliente removido com sucesso!</string>
+        <string name="novos">Novos</string>
+        <string name="sincronizacao_das_os">Sincronização das OS</string>
+        <string name="sincronizacao_dos_lotes">Sincronização dos lotes</string>
+        <string name="sincronizacao_do_perfil">Sincronização do perfil</string>
+        <string name="sincronizacao_dos_clientes">Sincronização dos clientes</string>
+        <string name="ultimos_inseridos">Últimos inseridos</string>
+        <string name="ordens_nao_sincronizados">Ordens não sincronizados com o servidor</string>
+        <string name="lotes_nao_sincronizados">Lotes não sincronizados com o servidor</string>
+        <string name="dados_do_perfil">Dados do perfil no servidor</string>
+        <string name="clientes_no_servidor">Clientes no servidor</string>
+        
+        
+        
 
 </resources>
